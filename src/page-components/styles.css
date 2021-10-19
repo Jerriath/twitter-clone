@@ -1,0 +1,138 @@
+/*
+---------------Table of Contents---------------
+1. Homepage Styling
+    1.a) General Styling
+    1.b) Navbar Styling
+    1.c) LeftPanel Styling
+    1.d) HomeFeed Styling
+    1.e) RightPanel Styling
+
+*/
+
+
+
+
+
+/*----------Homepage Styling----------*/
+
+.homepage {
+    width: 70%;
+    height: 100%;
+    margin: 0 auto;
+
+}
+
+.homeContent {
+    position: relative;
+    top: max(50px, 5%);
+    height: 95%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+
+/*-----Navbar Styling-----*/
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 70%;
+    height: 5%;
+    min-height: 50px;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+
+}
+
+.logo {
+    width: 13%;
+    min-width: 150px;
+}
+
+.logoImg {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+}
+
+.homeTitleDiv {
+    width: 55%;
+    border: 1px solid rgb(225, 225, 225);
+    border-top: none;
+    padding: auto;
+}
+
+.homeTitle {
+    margin: 10px;
+    font-weight: 500;
+}
+
+.searchBar {
+    margin-top: 5px;
+    width: 30%;
+    min-width: 300px;
+    background-color: transparent;
+    border-radius: 25px;
+    margin-left: 2%;
+}
+
+.searchImg {
+    position: relative;
+    bottom: 33px;
+    left: 15px;
+    width: 25px;
+    height: 25px;
+    z-index: 20;
+}
+
+.searchInput {
+    background: transparent;
+    border: none;
+    height: 25px;
+    padding: 10px 0;
+    font-size: 17px;
+    width: 76%; 
+    right: 0px;
+    background-color:rgb(225, 225, 225);
+    padding-left: 12%;
+    padding-right: 12%;
+    border-radius: 22.5px;
+}
+
+.searchInput:focus {
+    border: 1px solid rgb(252, 110, 80);
+    outline: none;
+    background: transparent;
+    height: 23px;
+}
+
+.searchInput:focus + svg {
+    fill: rgb(252, 110, 80);
+}
+
+/*-----LeftPanel Styling-----*/
+.leftPanel {
+    width: 13%;
+    height: 100%;
+    min-width: 150px;
+}
+
+/*-----HomeFeed Styling-----*/
+.homeFeed {
+    width: 55%;
+    height: 100%;
+    border-left: 1px solid rgb(225, 225, 225);
+    border-right: 1px solid rgb(225, 225, 225);
+}
+
+/*-----RightPanel Styling-----*/
+.rightPanel {
+    width: 30%;
+    min-width: 300px;
+    height: 100%;
+    min-width: 300px;
+    margin-left: 2%;
+}
