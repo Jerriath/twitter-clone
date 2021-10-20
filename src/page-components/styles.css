@@ -3,9 +3,10 @@
 1. Homepage Styling
     1.a) General Styling
     1.b) Header Styling
-    1.c) LeftPanel Styling
-    1.d) HomeFeed Styling
-    1.e) RightPanel Styling
+    1.c) Footer Styling
+    1.d) LeftPanel Styling
+    1.e) HomeFeed Styling
+    1.f) RightPanel Styling
 
 */
 
@@ -36,6 +37,13 @@
 .defaultFont {
     font-size: 1em;
     font-weight: 400;
+    margin: 0;
+}
+
+.titleFont {
+    font-size: 1.75em;
+    font-weight: 600;
+    margin: 0;
 }
 
 /*-----Header Styling-----*/
@@ -50,7 +58,6 @@
     display: flex;
     flex-direction: row;
     margin: auto;
-
 }
 
 .logo {
@@ -103,7 +110,7 @@
     font-size: 17px;
     width: 76%; 
     right: 0px;
-    background-color:rgb(225, 225, 225);
+    background-color:rgb(225, 225, 225, 0.5);
     padding-left: max(50px, 12%);
     padding-right: 12%;
     border-radius: 22.5px;
@@ -118,6 +125,66 @@
 
 .searchInput:focus + svg {
     fill: rgb(252, 110, 80);
+}
+
+/*-----Footer Styling-----*/
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 7%;
+    min-height: 75px;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    background-color: rgb(252, 110, 80);
+}
+
+.footerCentered {
+    width: 60%;
+    height: 100%;
+    margin: auto;
+    position: relative;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.footerMsg {
+    width: 70%;
+    text-align: left;
+    padding: 1% 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.loginBtn {
+    width: 12%;
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    font-size: 1.2em;
+    height: 2.75em;
+    margin: auto 1.5%;
+    border-radius: 1.5em;
+    font-weight: 700;
+}
+
+.signupBtn {
+    width: 12%;
+    background: white;
+    color: rgb(252, 110, 80);
+    border: 0;
+    font-size: 1.2em;
+    height: 2.75em;
+    margin: auto 1.5%;
+    border-radius: 1.5em;
+    font-weight: 700;
 }
 
 /*-----LeftPanel Styling-----*/
@@ -199,6 +266,11 @@
     padding: 2%;
     display: flex;
     flex-direction: row;
+    transition: background-color 0.2s linear;
+}
+
+.tweet:hover {
+    background-color: rgb(225, 225, 225, 0.5);
 }
 
 .imgHolder {
