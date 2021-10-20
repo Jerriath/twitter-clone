@@ -4,13 +4,13 @@ import Logo from "../../../assets/images/logo.png";
 
 
 
-const Navbar = () => {
+const Header = () => {
 
 
 
 
     return (
-        <div className="navbar" >
+        <div className="header" >
             <span className="logo" >
                 <img className="logoImg" src={Logo} alt="Page logo" />
             </span>
@@ -25,4 +25,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar;
+export default Header;

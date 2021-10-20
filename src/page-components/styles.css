@@ -2,7 +2,7 @@
 ---------------Table of Contents---------------
 1. Homepage Styling
     1.a) General Styling
-    1.b) Navbar Styling
+    1.b) Header Styling
     1.c) LeftPanel Styling
     1.d) HomeFeed Styling
     1.e) RightPanel Styling
@@ -15,6 +15,7 @@
 
 /*----------Homepage Styling----------*/
 
+/*-----General Styling-----*/
 .homepage {
     width: 70%;
     height: 100%;
@@ -32,8 +33,13 @@
     margin: 0 auto;
 }
 
-/*-----Navbar Styling-----*/
-.navbar {
+.defaultFont {
+    font-size: 1em;
+    font-weight: 400;
+}
+
+/*-----Header Styling-----*/
+.header {
     position: fixed;
     top: 0;
     left: 0;
@@ -48,8 +54,9 @@
 }
 
 .logo {
-    width: 13%;
+    width: 15%;
     min-width: 150px;
+    margin-right: 1%;
 }
 
 .logoImg {
@@ -72,7 +79,7 @@
 
 .searchBar {
     margin-top: 5px;
-    width: 30%;
+    width: 27%;
     min-width: 300px;
     background-color: transparent;
     border-radius: 25px;
@@ -97,7 +104,7 @@
     width: 76%; 
     right: 0px;
     background-color:rgb(225, 225, 225);
-    padding-left: 12%;
+    padding-left: max(50px, 12%);
     padding-right: 12%;
     border-radius: 22.5px;
 }
@@ -115,10 +122,67 @@
 
 /*-----LeftPanel Styling-----*/
 .leftPanel {
-    width: 13%;
+    width: 15%;
     height: 100%;
     min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 1%;
 }
+
+.leftOption {
+    background-color: transparent;
+    border-radius: 1.75em;
+    display: flex;
+    flex-direction: row;
+    margin: 5px 0;
+    height: 3.5em;
+    vertical-align: middle;
+    padding: 0 5px;
+    transition: background-color 0.2s linear;
+    font-weight: 400 !important;
+}
+
+.leftOption:hover {
+    background-color: rgb(225, 225, 225);
+}
+
+.svg-icon {
+    height: 26px;
+    width: auto;
+}
+
+.optionFont {
+    margin: auto 10px;
+    width: auto;
+    font-weight: inherit;
+}
+
+.selected {
+    font-weight: 600 !important;
+    box-shadow: 2px 2px 2px rgb(225, 225, 225);
+}
+
+.redButton {
+    text-align: center;
+    background-color: rgb(252, 110, 80);
+    border-radius: 1.75em;
+    height: 3.5em;
+    transition: background-color 0.2s linear;
+}
+
+.redButton:hover {
+    background-color: rgb(223, 52, 18);
+}
+
+.buttonFont {
+    text-align: center;
+    margin: .6em 0;
+    font-weight: 500;
+    color: white;
+}
+
+
 
 /*-----HomeFeed Styling-----*/
 .homeFeed {
@@ -128,9 +192,146 @@
     border-right: 1px solid rgb(225, 225, 225);
 }
 
+.tweet {
+    height: 12%;
+    width: 96%;
+    outline: 1px solid rgb(225, 225, 225);
+    padding: 2%;
+    display: flex;
+    flex-direction: row;
+}
+
+.imgHolder {
+    height: 55%;
+    margin-right: 2%;
+}
+
+.tweetUserImg {
+    height: 100%;
+    border-radius: 50%;
+}
+
+.tweetContent {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.tweeterInfoHolder {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.tweeterDisplayName {
+    margin: 0;
+    font-weight: 600;
+    margin-right: 1%;
+}
+
+.tweeterInfo {
+    margin: 0;
+    margin-right: 1%;
+    color:rgb(125, 125, 125)
+}
+
+.dots {
+    text-align: center;
+    margin-left: auto;
+    background-color: transparent;
+    border-radius: 3em;
+    width: 20px;
+    transition: background-color 0.2s linear;
+    padding-bottom: 5px;
+    height: 15px;
+}
+
+.dots:hover {
+    background-color: rgb(252, 110, 80);
+}
+
+.tweetMsgHolder {
+    height: 100%;
+}
+
+.tweetMsg {
+    margin: 0;
+}
+
+.tweetBtnHolder {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 2em;
+}
+
+.btnDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: rgb(125, 125, 125);
+    height: auto;
+}
+
+.tweetBtn {
+    height: 20px;
+    width: auto;
+    stroke: rgb(125, 125, 125);
+    transition: all 0.2s linear;
+    padding: 5px;
+    border-radius: 15px;
+    margin: auto;
+    margin-right: 5px;
+}
+
+.btnFont {
+    margin: auto;
+    color: inherit;
+    transition: all 0.2s linear;
+}
+
+.commentDiv:hover {
+    color: rgb(252, 110, 80);
+}
+
+.comment:hover {
+    stroke: rgb(252, 110, 80);
+    background-color: rgb(225, 225, 225);
+}
+
+.retweetDiv:hover {
+    color: rgb(70, 200, 70);
+}
+
+.retweet:hover {
+    stroke: rgb(70, 200, 70);
+    background-color: rgb(225, 225, 225);
+}
+
+.likeDiv:hover {
+    color: rgb(255, 33, 207);
+}
+
+.like:hover {
+    stroke: rgb(255, 33, 207);
+    background-color: rgb(225, 225, 225);
+}
+
+.shareDiv:hover {
+    color: rgb(50, 180, 255);
+}
+
+.share:hover {
+    stroke: rgb(50, 180, 255);
+    background-color: rgb(225, 225, 225);
+}
+
 /*-----RightPanel Styling-----*/
 .rightPanel {
-    width: 30%;
+    width: 27%;
     min-width: 300px;
     height: 100%;
     min-width: 300px;
