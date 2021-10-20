@@ -15,9 +15,9 @@ const HomePage = () => {
 
     return (
         <div className="homepage">
+            <LeftPanel />
             <Header />
             <div className="homeContent">
-                <LeftPanel />
                 <HomeFeed />
                 <RightPanel />
             </div>

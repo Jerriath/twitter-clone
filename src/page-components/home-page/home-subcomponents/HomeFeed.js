@@ -11,6 +11,17 @@ const HomeFeed = () => {
     return (
         <div className="homeFeed" >
             <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            <Tweet tweetInfo={testUser} />
+            
         </div>
     )
 }

@@ -28,10 +28,10 @@
     position: relative;
     top: max(50px, 5%);
     height: 95%;
-    width: 100%;
+    width: 79%;
     display: flex;
     flex-direction: row;
-    margin: 0 auto;
+    left: 21%;
 }
 
 .defaultFont {
@@ -50,19 +50,19 @@
 .header {
     position: fixed;
     top: 0;
-    left: 0;
+    left: 29.7%;
     right: 0;
-    width: 70%;
+    width: 55.3%;
     height: 5%;
     min-height: 50px;
     display: flex;
     flex-direction: row;
-    margin: auto;
+    z-index: 100;
+    background: white;
 }
 
 .logo {
-    width: 15%;
-    min-width: 150px;
+    width: max(150px, 20%);
     margin-right: 1%;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .homeTitleDiv {
-    width: 55%;
+    width: 82%;
     border: 1px solid rgb(225, 225, 225);
     border-top: none;
     padding: auto;
@@ -86,7 +86,7 @@
 
 .searchBar {
     margin-top: 5px;
-    width: 27%;
+    width: 18%;
     min-width: 300px;
     background-color: transparent;
     border-radius: 25px;
@@ -189,12 +189,12 @@
 
 /*-----LeftPanel Styling-----*/
 .leftPanel {
-    width: 15%;
+    position: fixed;
+    width: max(150px, 14%);
     height: 100%;
-    min-width: 150px;
     display: flex;
     flex-direction: column;
-    margin-right: 1%;
+    margin-right: 0.7%;
 }
 
 .leftOption {
@@ -253,7 +253,7 @@
 
 /*-----HomeFeed Styling-----*/
 .homeFeed {
-    width: 55%;
+    width: 79%;
     height: 100%;
     border-left: 1px solid rgb(225, 225, 225);
     border-right: 1px solid rgb(225, 225, 225);
@@ -403,7 +403,7 @@
 
 /*-----RightPanel Styling-----*/
 .rightPanel {
-    width: 27%;
+    width: 21%;
     min-width: 300px;
     height: 100%;
     min-width: 300px;

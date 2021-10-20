@@ -1,5 +1,5 @@
 import "../../styles.css";
-
+import Logo from "../../../assets/images/logo.png";
 
 
 
@@ -10,6 +10,9 @@ const LeftPanel = () => {
 
     return (
         <div className="leftPanel" >
+            <div className="logo" >
+                <img className="logoImg" src={Logo} alt="Page logo" />
+            </div>
             <div className="leftOption selected" >
                 <svg className="optionFont" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                     width="26" height="26"
