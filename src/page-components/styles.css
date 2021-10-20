@@ -105,7 +105,7 @@
 .searchInput {
     background: transparent;
     border: none;
-    height: 25px;
+    height: 20px;
     padding: 10px 0;
     font-size: 17px;
     width: 76%; 
@@ -120,7 +120,8 @@
     border: 1px solid rgb(252, 110, 80);
     outline: none;
     background: transparent;
-    height: 23px;
+    height: 18px;
+    width: 75.5%;
 }
 
 .searchInput:focus + svg {
@@ -203,7 +204,7 @@
     display: flex;
     flex-direction: row;
     margin: 5px 0;
-    height: 3.5em;
+    height: 3em;
     vertical-align: middle;
     padding: 0 5px;
     transition: background-color 0.2s linear;
@@ -408,4 +409,20 @@
     height: 100%;
     min-width: 300px;
     margin-left: 2%;
+}
+
+.rightSpacing {
+    height: auto;
+    width: 95%;
+    padding: 4%;
+    border: 1px solid rgb(225, 225, 225);
+    border-radius: 15px;
+    margin: 2% 0;
+}
+
+.rightSignup {
+    display: flex;
+    flex-direction: column;
+    height: 9em;
+    justify-content: space-between;
 }
