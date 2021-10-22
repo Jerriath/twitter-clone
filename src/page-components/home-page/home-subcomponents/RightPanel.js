@@ -1,4 +1,5 @@
 import "../../styles.css";
+import { Link } from "react-router-dom";
 
 
 
@@ -14,9 +15,9 @@ const RightPanel = () => {
                 <div className="rightSignup">
                     <h2 className="titleFont">New to Tweeter?</h2>
                     <p className="defaultFont">Sign up now to get the same timeline as everyone else.</p>
-                    <div className="redButton">
+                    <Link className="redButton" to="/signup" >
                         <h2 className="buttonFont">Sign Up</h2>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>
