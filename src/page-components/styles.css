@@ -492,7 +492,7 @@
     width: 50%;
     padding: 0 5%;
     height: 2.5em;
-    margin: 1em 0;
+    margin: .75em 0;
     border-radius: 1.5em;
     border: 1px solid rgb(125, 125, 125);
     font-size: 1em;
@@ -509,7 +509,7 @@
     border-radius: 1.5em;
     height: 2.5em;
     width: 40%;
-    margin-top: 4em;
+    margin-top: 1.75em;
     transition: all 0.2s linear;
     font-size: 1em;
 }
@@ -524,5 +524,15 @@
 }
 
 .imageInput {
-
+    width: 50%;
+    padding: .8em 5%;
+    height: 2.5em;
+    margin: auto;
+    margin-top: .5em;
+    margin-bottom: 1em;
+    border-radius: 1.5em;
+    border: 1px solid rgb(125, 125, 125);
+    font-size: 1em;
+    text-align: center;
+    font-size: 1em;
 }

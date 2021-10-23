@@ -115,8 +115,8 @@ const SignupPage = () => {
         <div className="signupPage">
             <h3 className="titleFont">Create your account</h3>
             <form className="signupForm">
-                <label>
-                    <input onChange={handleImageChange} className="imageInput" type="file" alt="profile pic" value={image} />
+                <label className="imageInput">
+                    <input onChange={handleImageChange} type="file" alt="profile pic" value={image} />
                 </label>
                 <label>
                     <input onChange={handleUserChange} className="formInput" type="text" placeholder="@Username" value={username} />
