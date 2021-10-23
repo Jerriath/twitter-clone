@@ -518,3 +518,11 @@
     border: 2px solid rgb(252, 110, 80);
     box-shadow: 3px 3px 3px rgb(225, 225, 225);
 }
+
+.formBtn:focus {
+    border: 2px solid rgb(50, 180, 255);
+}
+
+.imageInput {
+
+}

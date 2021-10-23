@@ -11,6 +11,7 @@ import { checkValid, checkPasswords } from "./signupFunctions";
 const SignupPage = () => {
 
     //Each of these states are for each of the inputs
+    const [image, setImage] = useState(null);
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [email, setEmail] = useState("");
@@ -74,6 +75,10 @@ const SignupPage = () => {
         setConfirmation(e.target.value);
     }
 
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
+    }
+
     const handleSubmitRequest = async (e) => {
         try {
             if (checkValid(username, usersArray) && checkPasswords(password, confirmation)) {
@@ -94,6 +99,7 @@ const SignupPage = () => {
                     joinDate: Timestamp.fromDate(new Date())
                 });
                 console.log("User set");
+                setUserCreated(true);
                 history.push("/");
             }
         }
@@ -109,6 +115,9 @@ const SignupPage = () => {
         <div className="signupPage">
             <h3 className="titleFont">Create your account</h3>
             <form className="signupForm">
+                <label>
+                    <input onChange={handleImageChange} className="imageInput" type="file" alt="profile pic" value={image} />
+                </label>
                 <label>
                     <input onChange={handleUserChange} className="formInput" type="text" placeholder="@Username" value={username} />
                 </label>
