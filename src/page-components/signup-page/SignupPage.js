@@ -11,7 +11,7 @@ import { checkValid, checkPasswords } from "./signupFunctions";
 const SignupPage = () => {
 
     //Each of these states are for each of the inputs
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState("");
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [email, setEmail] = useState("");
