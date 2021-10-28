@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { doc, setDoc, collection, getDocs, Timestamp } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { ref, uploadBytes } from "firebase/storage";
 import { db, auth, storage } from "../../firebase-config";
 import { checkValid, checkPasswords } from "./signupFunctions";
 
@@ -88,7 +89,9 @@ const SignupPage = () => {
                 console.log(creds.user);
                 //creds.user.sendEmailVerification();
                 const docRef = await doc(db, "users", creds.user.uid);
-                console.log("Setting document in remote database...");
+                const imageRef = ref(storage, `user-images/${creds.user.uid}`)
+                console.log("Setting document in remote database and uploading user image...");
+                await uploadBytes(imageRef, image);
                 await setDoc(docRef, {
                     username: username,
                     displayName: displayName,
@@ -116,7 +119,7 @@ const SignupPage = () => {
             <h3 className="titleFont">Create your account</h3>
             <form className="signupForm">
                 <label className="imageInput">
-                    <input onChange={handleImageChange} type="file" alt="profile pic" value={image} />
+                    <input onChange={handleImageChange} type="file" alt="profile pic" />
                 </label>
                 <label>
                     <input onChange={handleUserChange} className="formInput" type="text" placeholder="@Username" value={username} />
