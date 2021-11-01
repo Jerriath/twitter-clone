@@ -117,7 +117,7 @@ const SignupPage = () => {
     return (
         <div className="signupPage">
             <h3 className="titleFont">Create your account</h3>
-            <form className="signupForm">
+            <form onSubmit={handleSubmitRequest} className="signupForm">
                 <label className="imageInput">
                     <input onChange={handleImageChange} type="file" alt="profile pic" />
                 </label>
@@ -138,7 +138,7 @@ const SignupPage = () => {
                 </label>
                 <p className="defaultFont">Already have an account? <a href="/signin">Click Here!</a></p>
                 <label>
-                    <button onClick={handleSubmitRequest} className="formBtn" type="submit" >Submit</button>
+                    <button className="formBtn" type="submit" >Submit</button>
                 </label>
             </form>
         </div>
