@@ -8,7 +8,7 @@ import LeftPanel from "./home-subcomponents/LeftPanel";
 import RightPanel from "./home-subcomponents/RightPanel";
 import { auth } from "../../firebase-config";
 import { onAuthStateChanged } from "@firebase/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 
@@ -28,7 +28,13 @@ const HomePage = () => {
         }
     });
 
-    console.log(auth.currentUser);
+    //This hook is used to cleanup the states before unmounting
+    useEffect( () => {
+        return () => {
+            setFooter(null);
+            setRightPanel(null);
+        }
+    }, []);
 
     return (
         <div className="homepage">

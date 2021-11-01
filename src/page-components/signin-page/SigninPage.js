@@ -23,6 +23,7 @@ const SigninPage = () => {
         return () => {
             setEmail("");
             setPassword("");
+            setError(null);
         }
     }, []);
 
