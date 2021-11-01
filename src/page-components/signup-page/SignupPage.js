@@ -4,7 +4,8 @@ import { doc, setDoc, collection, getDocs, Timestamp } from "firebase/firestore"
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
 import { db, auth, storage } from "../../firebase-config";
-import { checkValid, checkPasswords } from "./signupFunctions";
+import { checkValid, checkConfirmation, checkInputs } from "./signupFunctions";
+import uniqid from "uniqid";
 
 
 
@@ -25,6 +26,9 @@ const SignupPage = () => {
     //This state is used for the second useEffect to clear all the states before unmounting this component
     const [userCreated, setUserCreated] = useState(false);
 
+    //This state is used to display error msgs when an error occured when submitting the form
+    const [errorMsg, setErrorMsg] = useState(null);
+
     //This "useHistory" hook is used for rerouting back to the homepage after clicking submit
     let history = useHistory();
 
@@ -43,6 +47,7 @@ const SignupPage = () => {
         })
     })
 
+    //This hook is used for cleaning up the DOM before unmounting
     useEffect( () => {
         if (userCreated) {
             return ( () => {
@@ -82,7 +87,7 @@ const SignupPage = () => {
 
     const handleSubmitRequest = async (e) => {
         try {
-            if (checkValid(username, usersArray) && checkPasswords(password, confirmation)) {
+            if (checkInputs(username, usersArray, password, confirmation)) {
 
                 e.preventDefault();
                 const creds = await createUserWithEmailAndPassword(auth, email, password);
@@ -105,10 +110,31 @@ const SignupPage = () => {
                 setUserCreated(true);
                 history.push("/");
             }
+            else {
+                e.preventDefault();
+                let errorArray = [];
+                if (!checkValid(username, usersArray)) {
+                    errorArray.push("Username has already been taken.")
+                }
+                if (!checkConfirmation(password, confirmation)) {
+                    errorArray.push("Confirmation does not match password.")
+                }
+                setErrorMsg(
+                    <div className="errorMsg" >
+                        <ul className="errorList">
+                            {errorArray.map( (error) => {
+                                return <li key={uniqid()} className="defaultFont" >{error}</li>
+                            })}
+                        </ul>
+                    </div>
+                )
+                window.setTimeout(() => {
+                    setErrorMsg(null);
+                }, 4000)
+            }
         }
         catch (error) {
-            console.log("An error occurred: ");
-            console.log(error);
+            console.log("An error occurred: " + error.message);
         }
     }
 
@@ -122,25 +148,27 @@ const SignupPage = () => {
                     <input onChange={handleImageChange} type="file" alt="profile pic" />
                 </label>
                 <label>
-                    <input onChange={handleUserChange} className="formInput" type="text" placeholder="@Username" value={username} />
+                    <input onChange={handleUserChange} className="formInput" type="text" placeholder="@Username" value={username} required />
                 </label>
                 <label>
-                    <input onChange={handleDisplayChange} className="formInput" type="text" placeholder="Display Name" value={displayName} />
+                    <input onChange={handleDisplayChange} className="formInput" type="text" placeholder="Display Name" value={displayName} required />
                 </label>
                 <label>
-                    <input onChange={handleEmailChange} className="formInput" type="email" placeholder="Email" value={email} />
+                    <input onChange={handleEmailChange} className="formInput" type="email" placeholder="Email" value={email} required />
                 </label>
                 <label>
-                    <input onChange={handlePasswordChange} className="formInput" type="password" placeholder="Password" value={password} />
+                    <input onChange={handlePasswordChange} className="formInput" type="password" placeholder="Password" value={password} minLength="8" required />
                 </label>
                 <label>
-                    <input onChange={handleConfirmationChange} className="formInput" type="password" placeholder="Re-enter Password" value={confirmation} />
+                    <input onChange={handleConfirmationChange} className="formInput" type="password" placeholder="Re-enter Password" value={confirmation} required />
                 </label>
                 <p className="defaultFont">Already have an account? <a href="/signin">Click Here!</a></p>
                 <label>
                     <button className="formBtn" type="submit" >Submit</button>
                 </label>
+                <p className="defaultFont">Return home? <a href="/" >Click here.</a></p>
             </form>
+            {errorMsg}
         </div>
     )
 }

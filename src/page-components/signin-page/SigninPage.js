@@ -12,6 +12,9 @@ const SigninPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    //State used for holding the errorMsg if there is one
+    const [error, setError] = useState(null);
+
     //Hook used for rerouting back to the homepage
     const history = useHistory();
 
@@ -40,7 +43,15 @@ const SigninPage = () => {
             history.push("/");
         }
         catch (error) {
-            console.log(error);
+            e.preventDefault();
+            setError(
+                <div className="errorMsg" >
+                    <p className="defaultFont errorList" >Email or password is incorrect. Please try again.</p>
+                </div>
+            )
+            window.setTimeout(() => {
+                setError(null);
+            }, 4000)
         }
     }
 
@@ -59,7 +70,9 @@ const SigninPage = () => {
                 <label>
                     <button className="formBtn" type="submit" >Submit</button>
                 </label>
+                <p className="defaultFont">Return home? <a href="/" >Click here.</a></p>
             </form>
+            {error}
         </div>
     )
 }
