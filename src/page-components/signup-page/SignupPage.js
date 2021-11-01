@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { doc, setDoc, collection, getDocs, Timestamp } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
@@ -136,10 +136,9 @@ const SignupPage = () => {
                 <label>
                     <input onChange={handleConfirmationChange} className="formInput" type="password" placeholder="Re-enter Password" value={confirmation} />
                 </label>
+                <p className="defaultFont">Already have an account? <a href="/signin">Click Here!</a></p>
                 <label>
-                    <Link to="/" >
-                        <button onClick={handleSubmitRequest} className="formBtn" type="submit" >Submit</button>
-                    </Link>
+                    <button onClick={handleSubmitRequest} className="formBtn" type="submit" >Submit</button>
                 </label>
             </form>
         </div>

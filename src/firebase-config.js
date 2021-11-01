@@ -29,5 +29,5 @@ const storageRef = ref(storage);
 
 //const timestamp = firestore.FieldValue.serverTimestamp();
 
-export { db, auth, storage };
+export { db, auth, storage, storageRef };
 export default app;
