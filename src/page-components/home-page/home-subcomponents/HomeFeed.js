@@ -1,10 +1,9 @@
 import "../../styles.css";
 import Tweet from "./Tweet";
-import { doc, setDoc, collection, getDocs, Timestamp } from "firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../../../firebase-config";
-import { testUser } from "../../../testVariables.js";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../firebase-config";
 import { useState, useEffect } from "react"
+import uniqid from "uniqid";
 
 
 
@@ -24,22 +23,13 @@ const HomeFeed = () => {
         }).then ( () => {
             console.log(tweets);
         })
-    })
+    }, []);
 
     return (
         <div className="homeFeed" >
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            <Tweet tweetInfo={testUser} />
-            
+            {tweets.forEach( (tweet) => {
+                return <Tweet tweetInfo={tweet} key={uniqid()} />
+            })}
         </div>
     )
 }

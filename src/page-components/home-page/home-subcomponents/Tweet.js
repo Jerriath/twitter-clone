@@ -1,4 +1,7 @@
-
+import { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { ref, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../../../firebase-config";
 
 
 
@@ -7,15 +10,36 @@ const Tweet = (props) => {
 
     const tweetInfo = props.tweetInfo;
 
+
+    //States for storing info related to the tweet (specifically tweeter info); this is needed because the tweeter info needs to be fetched from backend
+    const [userImage, setUserImage] = useState("");
+    const [username, setUsername] = useState("");
+    const [displayName, setDisplayName] = useState("");
+
+
+    useEffect( () => {
+        const docRef = doc(db, "users", tweetInfo.tweeterId);
+        const user = getDoc(docRef).then( (snapshot) => {return snapshot.data()});
+        setUsername(user.username);
+        setDisplayName(user.displayName);
+    }, [tweetInfo.tweeterId])
+
+    useEffect( () => {
+        const imageRef = ref(storage, "user-images/" + tweetInfo.tweeterId);
+        const imageSrc = getDownloadURL(imageRef);
+        setUserImage(imageSrc);
+    }, [tweetInfo.tweeterId])
+
+
     return (
         <div className="tweet">
             <div className="imgHolder">
-                <img className="tweetUserImg" alt="User profile" src={tweetInfo.userImg} /> 
+                <img className="tweetUserImg" alt="User profile" src={userImage} /> 
             </div>
             <div className="tweetContent">
                 <div className="tweeterInfoHolder">
-                    <h3 className="tweeterDisplayName defaultFont">{tweetInfo.displayName}</h3>
-                    <h3 className="tweeterInfo defaultFont">{tweetInfo.username}</h3>
+                    <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
+                    <h3 className="tweeterInfo defaultFont">{username}</h3>
                     <h3 className="tweeterInfo defaultFont">&middot;</h3>
                     <h3 className="tweeterInfo defaultFont">{tweetInfo.date}</h3>
                     <h3 className="tweeterInfo defaultFont dots">&middot;&middot;&middot;</h3>
