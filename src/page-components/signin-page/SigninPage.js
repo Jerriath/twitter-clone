@@ -61,14 +61,14 @@ const SigninPage = () => {
         <div className="signupPage">
             <h3 className="titleFont">Sign-in to your account</h3>
             <form onSubmit={handleSubmitRequest} className="signinForm">
-                <label>
+                <label className="btnLabel">
                     <input onChange={handleEmailChange} className="signinInput" type="email" placeholder="Email" value={email} />
                 </label>
-                <label>
+                <label className="btnLabel" >
                     <input onChange={handlePasswordChange} className="signinInput " type="password" placeholder="Password" value={password} />
                 </label>
                 <p className="defaultFont">Don't have an account? <a href="/signup">Click Here!</a></p>
-                <label>
+                <label className="btnLabel">
                     <button className="formBtn" type="submit" >Submit</button>
                 </label>
                 <p className="defaultFont">Return home? <a href="/" >Click here.</a></p>

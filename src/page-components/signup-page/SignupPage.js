@@ -58,7 +58,7 @@ const SignupPage = () => {
                 setConfirmation("");
             });
         }
-    })
+    }, [userCreated])
 
 
     const handleUserChange = (e) => {
@@ -98,7 +98,7 @@ const SignupPage = () => {
                 console.log("Setting document in remote database and uploading user image...");
                 await uploadBytes(imageRef, image);
                 await setDoc(docRef, {
-                    username: username,
+                    username: "@" + username,
                     displayName: displayName,
                     likes: [],
                     tweets: [],
