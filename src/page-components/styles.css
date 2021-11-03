@@ -7,6 +7,7 @@
     1.d) LeftPanel Styling
     1.e) HomeFeed Styling
     1.f) RightPanel Styling
+    1.g) TweetInput Styling
 2. Signup Page Styling
 */
 
@@ -454,6 +455,31 @@
     flex-direction: column;
     height: 9em;
     justify-content: space-between;
+}
+
+/*-----TweetInput Styling-----*/
+.greyScreen {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+}
+
+.tweetInput {
+    position: fixed; 
+    height: 30%;
+    width: 30%;
+    top: 0;
+    bottom: 40%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 1px solid white;
+    border-radius: 15px;
+    background-color: white;
 }
 
 

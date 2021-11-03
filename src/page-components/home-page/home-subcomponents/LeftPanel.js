@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 
 
-const LeftPanel = () => {
+const LeftPanel = (props) => {
 
 
 
@@ -29,7 +29,7 @@ const LeftPanel = () => {
                 <h2 className="optionFont">Profile</h2>
             </div>
             <div className="redButton">
-                <h2 className="buttonFont">Tweet</h2>
+                <h2 onClick={props.onTweetHandler} className="buttonFont">Tweet</h2>
             </div>
         </div>
     )
