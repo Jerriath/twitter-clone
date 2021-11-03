@@ -6,6 +6,7 @@ import { ref, uploadBytes } from "firebase/storage";
 import { db, auth, storage } from "../../firebase-config";
 import { checkValid, checkConfirmation, checkInputs } from "./signupFunctions";
 import uniqid from "uniqid";
+import defaultPic from "../../assets/images/default_prof_pic.png";
 
 
 
@@ -88,7 +89,6 @@ const SignupPage = () => {
     const handleSubmitRequest = async (e) => {
         try {
             if (checkInputs(username, usersArray, password, confirmation)) {
-
                 e.preventDefault();
                 const creds = await createUserWithEmailAndPassword(auth, email, password);
                 console.log(creds.user);
@@ -96,6 +96,9 @@ const SignupPage = () => {
                 const docRef = await doc(db, "users", creds.user.uid);
                 const imageRef = ref(storage, `user-images/${creds.user.uid}`)
                 console.log("Setting document in remote database and uploading user image...");
+                if (image === "") {
+                    setImage(defaultPic);
+                }
                 await uploadBytes(imageRef, image);
                 await setDoc(docRef, {
                     username: "@" + username,
@@ -112,29 +115,32 @@ const SignupPage = () => {
             }
             else {
                 e.preventDefault();
-                let errorArray = [];
-                if (!checkValid(username, usersArray)) {
-                    errorArray.push("Username has already been taken.")
-                }
-                if (!checkConfirmation(password, confirmation)) {
-                    errorArray.push("Confirmation does not match password.")
-                }
-                setErrorMsg(
-                    <div className="errorMsg" >
-                        <ul className="errorList">
-                            {errorArray.map( (error) => {
-                                return <li key={uniqid()} className="defaultFont" >{error}</li>
-                            })}
-                        </ul>
-                    </div>
-                )
-                window.setTimeout(() => {
-                    setErrorMsg(null);
-                }, 4000)
+                throw new Error("Username or password confirmation invalid!");
             }
         }
         catch (error) {
-            console.log("An error occurred: " + error.message);
+            let errorArray = [];
+            if (error.toString().includes("auth/email-already-in-use")) {
+                errorArray.push("Email is already in use. Please use another.")
+            }
+            if (!checkValid(username, usersArray)) {
+                errorArray.push("Username has already been taken.")
+            }
+            if (!checkConfirmation(password, confirmation)) {
+                errorArray.push("Confirmation does not match password.")
+            }
+            setErrorMsg(
+                <div className="errorMsg" >
+                    <ul className="errorList">
+                        {errorArray.map( (error) => {
+                            return <li key={uniqid()} className="defaultFont" >{error}</li>
+                        })}
+                    </ul>
+                </div>
+            )
+            window.setTimeout(() => {
+                setErrorMsg(null);
+            }, 4000)
         }
     }
 

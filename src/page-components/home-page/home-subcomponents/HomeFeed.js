@@ -18,18 +18,19 @@ const HomeFeed = () => {
             snapshot.forEach( (tweet) => {
                 tempArray.push(tweet.data());
             });
-        }).then( () => {
-            setTweets(tempArray);
-        }).then ( () => {
-            console.log(tweets);
+            return tempArray;
+        }).then( async (returnedArray) => {
+            setTweets(returnedArray);
         })
     }, []);
 
+    useEffect( () => {
+        console.log(tweets);
+    }, [tweets])
+
     return (
         <div className="homeFeed" >
-            {tweets.forEach( (tweet) => {
-                return <Tweet tweetInfo={tweet} key={uniqid()} />
-            })}
+            {tweets.map( tweet => <Tweet tweetInfo={tweet} /> )}
         </div>
     )
 }
