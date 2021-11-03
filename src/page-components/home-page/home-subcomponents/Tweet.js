@@ -10,7 +10,6 @@ const Tweet = (props) => {
 
     const tweetInfo = props.tweetInfo;
 
-
     //States for storing info related to the tweet (specifically tweeter info); this is needed because the tweeter info needs to be fetched from backend
     const [userImage, setUserImage] = useState("");
     const [username, setUsername] = useState("");
@@ -19,16 +18,19 @@ const Tweet = (props) => {
 
     useEffect( () => {
         const docRef = doc(db, "users", tweetInfo.tweeterId);
-        const user = getDoc(docRef).then( (snapshot) => {return snapshot.data()});
-        setUsername(user.username);
-        setDisplayName(user.displayName);
+        getDoc(docRef).then( (snapshot) => {return snapshot.data()}).then( (user) => {
+            setUsername(user.username);
+            setDisplayName(user.displayName);
+        });
     }, [tweetInfo.tweeterId])
 
     useEffect( () => {
         const imageRef = ref(storage, "user-images/" + tweetInfo.tweeterId);
-        const imageSrc = getDownloadURL(imageRef);
-        setUserImage(imageSrc);
+        getDownloadURL(imageRef).then( (imageSrc) => {
+            setUserImage(imageSrc);
+        });
     }, [tweetInfo.tweeterId])
+
 
 
     return (
@@ -41,7 +43,7 @@ const Tweet = (props) => {
                     <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
                     <h3 className="tweeterInfo defaultFont">{username}</h3>
                     <h3 className="tweeterInfo defaultFont">&middot;</h3>
-                    <h3 className="tweeterInfo defaultFont">{tweetInfo.date}</h3>
+                    <h3 className="tweeterInfo defaultFont">{new Date(tweetInfo.date.seconds * 1000).toLocaleDateString("en-US")}</h3>
                     <h3 className="tweeterInfo defaultFont dots">&middot;&middot;&middot;</h3>
                 </div>
                 <div className="tweetMsgHolder">

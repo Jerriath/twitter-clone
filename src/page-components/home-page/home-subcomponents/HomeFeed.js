@@ -30,7 +30,9 @@ const HomeFeed = () => {
 
     return (
         <div className="homeFeed" >
-            {tweets.map( tweet => <Tweet tweetInfo={tweet} /> )}
+            {tweets.map( (tweet) => {
+                return <Tweet tweetInfo={tweet} key={uniqid()} />
+            })}
         </div>
     )
 }
