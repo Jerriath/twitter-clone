@@ -472,6 +472,7 @@
     position: fixed; 
     height: 30%;
     width: 30%;
+    min-width: 600px;
     top: 0;
     bottom: 40%;
     left: 0;
@@ -480,6 +481,75 @@
     border: 1px solid white;
     border-radius: 15px;
     background-color: white;
+    padding: 0 1%;
+}
+
+.tweetHeader {
+    height: 2em;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: .75em;
+}
+
+.line {
+    background: rgb(225, 225, 225);
+    width:  630px;
+    position: relative;
+    left: -15px;
+    border: 0;
+    height: 1px;
+
+}
+
+.closeForm {
+    background: none;
+    border: none;
+    border-radius: 1.2em;
+    font-size: 2em;
+    height: auto;
+    width: 1.1em;
+    color:  rgb(252, 110, 80);
+    cursor: pointer;
+    margin: auto 0;
+    padding: none;
+}
+
+.closeForm:hover {
+    background-color: rgb(225, 225, 225);
+}
+
+.tweetForm {
+    height: auto;
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+}
+
+.tweetLabel {
+    width: 80%;
+}
+
+.tweetText {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    height: auto;
+    font-size: 1em;
+    width: 100%;
+    border: none;
+    padding: 0;
+}
+
+.tweetText:focus {
+    outline: none;
 }
 
 
