@@ -6,9 +6,6 @@ import { Link } from "react-router-dom";
 
 const LeftPanel = (props) => {
 
-
-
-
     return (
         <div className="leftPanel" >
             <Link className="logo" to="/">

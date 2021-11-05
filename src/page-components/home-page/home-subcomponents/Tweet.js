@@ -8,6 +8,8 @@ import { db, storage } from "../../../firebase-config";
 
 const Tweet = (props) => {
 
+
+    console.log(props);
     const tweetInfo = props.tweetInfo;
 
     //States for storing info related to the tweet (specifically tweeter info); this is needed because the tweeter info needs to be fetched from backend

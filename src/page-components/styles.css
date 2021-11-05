@@ -470,11 +470,10 @@
 
 .tweetInput {
     position: fixed; 
-    height: 30%;
+    height: auto;
     width: 30%;
     min-width: 600px;
-    top: 0;
-    bottom: 40%;
+    top: 20%;
     left: 0;
     right: 0;
     margin: auto;
@@ -494,7 +493,7 @@
 
 .line {
     background: rgb(225, 225, 225);
-    width:  630px;
+    width:  105%;
     position: relative;
     left: -15px;
     border: 0;
@@ -528,10 +527,22 @@
     right: 0;
     bottom: 0;
     margin: 0;
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 2% 0;
 }
 
 .tweetLabel {
     width: 80%;
+}
+
+.tweetInputRight {
+    width: 90%;
+}
+
+.tweetTextHolder {
+    width: 100%;
+    padding: 2% 0;
 }
 
 .tweetText {
@@ -542,14 +553,23 @@
     bottom: 0;
     margin: auto;
     height: auto;
-    font-size: 1em;
-    width: 100%;
+    font-size: 16px;
+    min-height: 1.2em;
+    width: 91%;
     border: none;
     padding: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .tweetText:focus {
     outline: none;
+}
+
+.tweetProfPic {
+    width: 9%;
 }
 
 
