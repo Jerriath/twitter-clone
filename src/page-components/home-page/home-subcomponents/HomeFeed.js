@@ -20,6 +20,9 @@ const HomeFeed = () => {
             });
             return tempArray;
         }).then( async (returnedArray) => {
+            returnedArray.sort( (a, b) => {
+                return a.date - b.date ? -1 : 1;
+            })
             setTweets(returnedArray);
         })
     }, []);

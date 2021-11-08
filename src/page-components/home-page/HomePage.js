@@ -7,10 +7,11 @@ import SignoutPanel from "./home-subcomponents/SignoutPanel";
 import LeftPanel from "./home-subcomponents/LeftPanel";
 import RightPanel from "./home-subcomponents/RightPanel";
 import TweetInput from "./home-subcomponents/TweetInput";
-import { auth, storage } from "../../firebase-config";
+import { auth, storage, db } from "../../firebase-config";
 import { onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect } from "react";
 import { ref, getDownloadURL } from "@firebase/storage";
+import { getDoc, doc } from "@firebase/firestore";
 
 
 
@@ -27,7 +28,7 @@ const HomePage = () => {
 
     //This state is for holding important information about the user (prof pic and user data) 
     const [userInfo, setUserInfo] = useState(null);
-    const [userId, setUserId] = useState();
+    const [userId, setUserId] = useState(null);
     const [userImg, setUserImg] = useState("");
 
     //This observer is used to check if someone is signed in; If yes, the homeFeed and rightPanel will be set to null
@@ -47,24 +48,39 @@ const HomePage = () => {
         }
     }, []);
 
-    //This hook is used to retrieve the current user's prof pic
+    //This hook is used to retrieve the current user's prof pic and userInfo
     useEffect( () => {
-        const imageRef = ref(storage, "user-images/" + userId);
-        getDownloadURL(imageRef).then( (imageSrc) => {
-            setUserImg(imageSrc);
-        })
+        if (userId !== null) {
+            const imageRef = ref(storage, "user-images/" + userId);
+            getDownloadURL(imageRef).then( (imageSrc) => {
+                setUserImg(imageSrc);
+            }); 
+        }
     }, [userId])
 
+    //This hook is used to retrieve the userInfo from firestore
+    useEffect( () => {
+        if (userId !== null) {
+            const userRef = doc(db, "users", userId);
+            getDoc(userRef).then( (user) => {
+                setUserInfo(user.data());
+            })
+        }
+    }, [userId])
 
 
     const onTweetHandler = () => {
         console.log(userImg);
         if (userId) {
-            setTweetInput(<TweetInput profPic={userImg} />)
+            setTweetInput(<TweetInput userId={userId} profPic={userImg} closeTweet={closeTweetHandler}/>)
         }
         else {
             alert("Please sign in to tweet.");
         }
+    }
+
+    const closeTweetHandler = () => {
+        setTweetInput(null);
     }
 
     return (

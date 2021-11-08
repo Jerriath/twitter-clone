@@ -529,7 +529,7 @@
     margin: 0;
     display: flex;
     flex-direction: row;
-    padding-bottom: 2% 0;
+    padding-bottom: 1%;
 }
 
 .tweetLabel {
@@ -538,11 +538,12 @@
 
 .tweetInputRight {
     width: 90%;
+    padding-left: 1em;
 }
 
 .tweetTextHolder {
     width: 100%;
-    padding: 2% 0;
+    padding-top: 2%;
 }
 
 .tweetText {
@@ -570,6 +571,37 @@
 
 .tweetProfPic {
     width: 9%;
+}
+
+.tweetImgBtn {
+    padding: 4px;
+    padding-bottom: 1px;
+    border-radius: 15px;
+    transition: all 0.2s linear;
+    border: none;
+    background: rgb(255, 255, 255);
+}
+
+.tweetImgBtn:hover {
+    background: rgb(225, 225, 225);
+}
+
+.submitTweet {
+    background: rgb(252, 110, 80);
+    border: none;
+    border-radius: 20px;
+    width: 15%;
+    height: auto;
+    color: white;
+    font-weight: 800;
+    font-size: 1em;
+    width: 6em;
+    height: 2.3em;
+    transition: all 0.2s linear;
+}
+
+.submitTweet:hover {
+    background-color: rgb(223, 52, 18);
 }
 
 
