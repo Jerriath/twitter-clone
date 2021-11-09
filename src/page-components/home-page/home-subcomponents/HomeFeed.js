@@ -23,7 +23,7 @@ const HomeFeed = () => {
             returnedArray.sort( (a, b) => {
                 return a.date - b.date ? -1 : 1;
             })
-            setTweets(returnedArray);
+            await setTweets(returnedArray);
         })
     }, []);
 

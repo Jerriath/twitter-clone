@@ -9,14 +9,25 @@ import { db, storage } from "../../../firebase-config";
 const Tweet = (props) => {
 
 
-    console.log(props);
     const tweetInfo = props.tweetInfo;
 
     //States for storing info related to the tweet (specifically tweeter info); this is needed because the tweeter info needs to be fetched from backend
     const [userImage, setUserImage] = useState("");
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
+    
+    //This state is for storing either null or the image attatched to the tweet
+    const [tweetImage, setTweetImage] = useState("");
 
+    useEffect( () => {
+        if (tweetInfo.containsImg && tweetInfo.id !== "") {
+            console.log(tweetInfo.id);
+            const tweetImgRef = ref(storage, "tweet-images/" + tweetInfo.id);
+            getDownloadURL(tweetImgRef).then( (imageSrc) => {
+                setTweetImage(<img width="100%" src={imageSrc} alt="User inputted media" />);
+            });
+        }
+    }, [tweetInfo.containsImg,tweetInfo.id])
 
     useEffect( () => {
         const docRef = doc(db, "users", tweetInfo.tweeterId);
@@ -50,6 +61,10 @@ const Tweet = (props) => {
                 </div>
                 <div className="tweetMsgHolder">
                     <p className="tweetMsg">{tweetInfo.msg}</p>
+                </div>
+
+                <div className="tweetImgHolder">
+                    {tweetImage}
                 </div>
 
 

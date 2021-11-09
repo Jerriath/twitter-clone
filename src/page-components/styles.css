@@ -291,7 +291,7 @@
 }
 
 .tweet {
-    height: 12%;
+    min-height: 12%;
     width: 96%;
     outline: 1px solid rgb(225, 225, 225);
     padding: 2%;
@@ -319,7 +319,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-
+    justify-content: space-around;
 }
 
 .tweeterInfoHolder {
@@ -358,6 +358,12 @@
 
 .tweetMsgHolder {
     height: 100%;
+}
+
+.tweetImgHolder {
+    height: auto;
+    max-width: 100%;
+    margin: 5%;
 }
 
 .tweetMsg {

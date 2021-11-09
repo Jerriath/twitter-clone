@@ -85,6 +85,7 @@ const TweetInput = (props) => {
                 comments: [],
                 containsImg: false,
                 date: Timestamp.fromDate(new Date()),
+                id: newTweetId,
                 isRetweet: false,
                 likes: 0,
                 msg: msg,
@@ -98,6 +99,7 @@ const TweetInput = (props) => {
                 comments: [],
                 containsImg: true,
                 date: Timestamp.fromDate(new Date()),
+                id: newTweetId,
                 isRetweet: false,
                 likes: 0,
                 msg: "",
@@ -113,6 +115,7 @@ const TweetInput = (props) => {
                 comments: [],
                 containsImg: true,
                 date: Timestamp.fromDate(new Date()),
+                id: newTweetId,
                 isRetweet: false,
                 likes: 0,
                 msg: msg,
@@ -124,7 +127,7 @@ const TweetInput = (props) => {
         }
         const userRef = doc(db, "users", props.userId);
         let userTweets = user.tweets;
-        userTweets.push({newTweetId})
+        userTweets.push(newTweetId)
         await updateDoc(userRef, {tweets: userTweets});
         window.location.reload();
     }
