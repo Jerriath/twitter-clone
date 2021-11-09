@@ -366,6 +366,10 @@
     margin: 5%;
 }
 
+.tweetImg {
+    border-radius: 5%;
+}
+
 .tweetMsg {
     margin: 0;
 }

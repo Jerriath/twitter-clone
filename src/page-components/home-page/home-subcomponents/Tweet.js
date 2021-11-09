@@ -24,7 +24,7 @@ const Tweet = (props) => {
             console.log(tweetInfo.id);
             const tweetImgRef = ref(storage, "tweet-images/" + tweetInfo.id);
             getDownloadURL(tweetImgRef).then( (imageSrc) => {
-                setTweetImage(<img width="100%" src={imageSrc} alt="User inputted media" />);
+                setTweetImage(<img className="tweetImg" width="100%" src={imageSrc} alt="User inputted media" />);
             });
         }
     }, [tweetInfo.containsImg,tweetInfo.id])

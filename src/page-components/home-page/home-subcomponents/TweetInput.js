@@ -94,7 +94,7 @@ const TweetInput = (props) => {
             })
         }
         //For tweets that only have an image and no msg
-        else if (msg === "" || image !== "") {
+        else if (msg === "" && image !== "") {
             await setDoc(tweetRef, {
                 comments: [],
                 containsImg: true,
