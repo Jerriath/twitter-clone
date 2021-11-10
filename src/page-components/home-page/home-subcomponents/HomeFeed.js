@@ -34,6 +34,7 @@ const HomeFeed = () => {
     return (
         <div className="homeFeed" >
             {tweets.map( (tweet) => {
+                console.log(tweet.id);
                 return <Tweet tweetInfo={tweet} key={uniqid()} />
             })}
         </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../../../firebase-config";
+import { db, storage, auth } from "../../../firebase-config";
 
 
 
@@ -9,12 +9,11 @@ import { db, storage } from "../../../firebase-config";
 const Tweet = (props) => {
 
 
-    const tweetInfo = props.tweetInfo;
-
     //States for storing info related to the tweet (specifically tweeter info); this is needed because the tweeter info needs to be fetched from backend
     const [userImage, setUserImage] = useState("");
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
+    const [tweetInfo, setTweetsInfo] = useState(props.tweetInfo);
     
     //This state is for storing either null or the image attatched to the tweet
     const [tweetImage, setTweetImage] = useState("");
@@ -43,6 +42,32 @@ const Tweet = (props) => {
             setUserImage(imageSrc);
         });
     }, [tweetInfo.tweeterId])
+
+    const handleLike = async (e) => {
+        const tweetRef = await doc(db, "tweets", tweetInfo.id);
+        const currentUserRef = await doc(db, "users", auth.currentUser.uid);
+        const currentUser = (await getDoc(currentUserRef)).data();
+        console.log(currentUser);
+        if (currentUser.likes.includes(tweetInfo.id)) {
+            console.log("Disliked")
+            console.log("Old Likes: " + tweetInfo.likes)
+            await updateDoc(tweetRef, {likes: tweetInfo.likes - 1});
+            let newLikesArray = currentUser.likes.filter( (value) => {
+                return value !== tweetInfo.id;
+            })
+            updateDoc(currentUserRef, {likes: newLikesArray});
+        }
+        else {
+            console.log("Liked")
+            console.log("Old likes: " + tweetInfo.likes)
+            await updateDoc(tweetRef, {likes: tweetInfo.likes + 1});
+            let oldLikeArray = currentUser.likes;
+            oldLikeArray.push(tweetInfo.id);
+            await updateDoc(currentUserRef, {likes: oldLikeArray})
+        }
+        setTweetsInfo((await getDoc(tweetRef)).data());
+        //await updateDoc(tweetRef, {likes: tweetInfo.likes++});
+    }
 
 
 
@@ -84,7 +109,7 @@ const Tweet = (props) => {
                         </svg>
                         <p className="btnFont">{tweetInfo.retweets ? tweetInfo.retweets : ""}</p>
                     </div>
-                    <div className="btnDiv likeDiv">
+                    <div onClick={handleLike} className="btnDiv likeDiv">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" className="tweetBtn like">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                         </svg>
