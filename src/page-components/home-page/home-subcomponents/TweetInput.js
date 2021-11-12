@@ -90,6 +90,8 @@ const TweetInput = (props) => {
                 likes: 0,
                 msg: msg,
                 retweets: 0,
+                retweeter: "",
+                retweetId: "",
                 tweeterId: props.userId
             })
         }
@@ -103,6 +105,8 @@ const TweetInput = (props) => {
                 isRetweet: false,
                 likes: 0,
                 msg: "",
+                retweeter: "",
+                retweetId: "",
                 retweets: 0,
                 tweeterId: props.userId
             });
@@ -119,6 +123,8 @@ const TweetInput = (props) => {
                 isRetweet: false,
                 likes: 0,
                 msg: msg,
+                retweeter: "",
+                retweetId: "",
                 retweets: 0,
                 tweeterId: props.userId
             });
