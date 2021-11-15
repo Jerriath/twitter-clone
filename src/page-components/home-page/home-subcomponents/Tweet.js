@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../../../firebase-config";
 import uniqid from "uniqid";
@@ -46,7 +46,7 @@ const Tweet = (props) => {
         if (tweetInfo.retweeter) {
             const retweeterRef = doc(db, "users", tweetInfo.retweeter);
             getDoc(retweeterRef).then( (retweeter) => {
-                setRetweetMsg(`${retweeter.displayName} retweeted`);
+                setRetweetMsg(`${retweeter.data().displayName} retweeted`);
             })
             const originalTweetRef = doc(db, "tweets", tweetInfo.retweetId);
             getDoc(originalTweetRef).then( (originalTweet) => {
@@ -114,20 +114,33 @@ const Tweet = (props) => {
     //Function for handling retweets
     const handleRetweet = async () => {
         try {
-            const currentUserRef = await doc(db, "users", auth.currentUser.uid);
+            const currentUserRef = doc(db, "users", auth.currentUser.uid);
             const currentUser = (await getDoc(currentUserRef)).data();
-            const currentTweetRef = await doc(db, "tweets", tweetInfo.id);
-            const oldRetweet = currentUser.tweets.find( (tweet) => {
-                return tweet.retweetId === tweetInfo.id
-            });
+            const currentTweetRef = doc(db, "tweets", tweetInfo.id);
+            const currentUserTweets = [];
+            for (let i = 0; i < currentUser.tweets.length; i++) {
+                const someTweet = await getDoc(doc(db, "tweets", currentUser.tweets[i]));
+                console.log(someTweet.data());
+                currentUserTweets.push(someTweet.data());
+            }
+            const oldRetweet = currentUserTweets.find( (tweet) => {
+                return tweet.retweetId === tweetInfo.id;
+            })
             if (oldRetweet) {
+                console.log("Found retweet")
                 const oldRetweetRef = await doc(db, "tweets", oldRetweet.id);
                 await deleteDoc(oldRetweetRef);
-                let tempTweetsArray = currentUser.tweets;
-                tempTweetsArray.filter( (tweet) => {
-                    return !(tweet.retweetId === tweetInfo.id);
+                let newTweetsArray = [];
+                currentUserTweets.filter( (tweet) => {
+                    if (tweet.retweetId === tweetInfo.id) {
+                        return false;
+                    }
+                    else {
+                        newTweetsArray.push(tweet.id);
+                        return true;
+                    }
                 })
-                await updateDoc(currentUserRef, tempTweetsArray);
+                await updateDoc(currentUserRef, {tweets: newTweetsArray});
                 await updateDoc(currentTweetRef, {retweets: tweetInfo.retweets - 1});
             }
             else {
@@ -136,7 +149,7 @@ const Tweet = (props) => {
                 await setDoc(newTweetRef, {
                     comments: [],
                     containsImg: tweetInfo.containsImg,
-                    date: tweetInfo.date,
+                    date: Timestamp.fromDate(new Date()),
                     id: newTweetId,
                     likes: 0,
                     msg: "",
@@ -150,7 +163,6 @@ const Tweet = (props) => {
                 await updateDoc(currentUserRef, {tweets: tempTweetsArray});
                 await updateDoc(currentTweetRef, {retweets: tweetInfo.retweets + 1})
             }
-            updateDoc()
             window.location.reload();
         }
         catch (error) {
