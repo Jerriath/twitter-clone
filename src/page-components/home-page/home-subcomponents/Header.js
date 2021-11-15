@@ -3,7 +3,7 @@ import "../../styles.css";
 
 
 
-const Header = () => {
+const Header = (props) => {
 
 
 
@@ -11,7 +11,7 @@ const Header = () => {
     return (
         <div className="header" >
             <span className="homeTitleDiv" >
-                <h2 className="homeTitle">Home</h2>
+                <h2 className="homeTitle">{props.header}</h2>
             </span>
             <span className="searchBar" >
                 <input className="searchInput" placeholder="Search Tweeter" />

@@ -53,6 +53,7 @@ const Tweet = (props) => {
                 setTweetInfo(originalTweet.data());
             })
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     //Hook used for retrieving the tweeter's info
@@ -169,6 +170,8 @@ const Tweet = (props) => {
             console.log(error);
         }
     }
+
+    //Function for handling comments; this one is gonna be hard I think
 
 
 

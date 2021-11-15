@@ -87,7 +87,7 @@ const HomePage = () => {
         <div className="homepage">
             {tweetInput}
             <LeftPanel onTweetHandler={onTweetHandler} />
-            <Header />
+            <Header header="Home" />
             <div className="homeContent">
                 <HomeFeed />
                 {rightPanel}
