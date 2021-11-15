@@ -3,6 +3,7 @@ import React from "react";
 import Header from "./home-subcomponents/Header";
 import Footer from "./home-subcomponents/Footer";
 import HomeFeed from "./home-subcomponents/HomeFeed";
+import ProfilePage from "../profile-page/ProfilePage";
 import SignoutPanel from "./home-subcomponents/SignoutPanel";
 import LeftPanel from "./home-subcomponents/LeftPanel";
 import RightPanel from "./home-subcomponents/RightPanel";
@@ -30,6 +31,9 @@ const HomePage = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [userId, setUserId] = useState(null);
     const [userImg, setUserImg] = useState("");
+
+    //This state is for choosing whether to display the HomeFeed or ProfilePage
+    const [showProfile, setShowProfile] = useState(false);
 
     //This observer is used to check if someone is signed in; If yes, the homeFeed and rightPanel will be set to null
     onAuthStateChanged(auth, (user) => {
@@ -83,13 +87,20 @@ const HomePage = () => {
         setTweetInput(null);
     }
 
+    const onProfileHandler = () => {
+        setShowProfile(true);
+    }
+    const onHomeHandler = () => {
+        setShowProfile(false);
+    }
+
     return (
         <div className="homepage">
             {tweetInput}
-            <LeftPanel onTweetHandler={onTweetHandler} />
+            <LeftPanel onTweetHandler={onTweetHandler} onProfileHandler={onProfileHandler} onHomeHandler={onHomeHandler} />
             <Header header="Home" />
             <div className="homeContent">
-                <HomeFeed />
+                {showProfile ? <ProfilePage /> : <HomeFeed />}
                 {rightPanel}
             </div>
             {footer}

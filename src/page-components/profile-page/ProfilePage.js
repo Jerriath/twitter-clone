@@ -1,8 +1,8 @@
 import "../styles.css";
 import React from "react";
-import Header from "./home-subcomponents/Header";
-import LeftPanel from "./home-subcomponents/LeftPanel";
-import RightPanel from "./home-subcomponents/RightPanel";
+import Header from "../home-page/home-subcomponents/Header";
+import LeftPanel from "../home-page/home-subcomponents/LeftPanel";
+import RightPanel from "../home-page/home-subcomponents/RightPanel";
 import { auth, storage, db } from "../../firebase-config";
 import { useState, useEffect } from "react";
 import { ref, getDownloadURL } from "@firebase/storage";
@@ -13,8 +13,10 @@ const ProfilePage = (props) => {
 
 
     return (
-        <div>
+        <div className="homeFeed" >
             
         </div>
     )
 }
+
+export default ProfilePage;
