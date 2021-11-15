@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../../../firebase-config";
 import uniqid from "uniqid";
@@ -14,7 +14,7 @@ const Tweet = (props) => {
     const [userImage, setUserImage] = useState("");
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
-    const [tweetInfo, setTweetsInfo] = useState(props.tweetInfo);
+    const [tweetInfo, setTweetInfo] = useState(props.tweetInfo);
     
     //This state is for storing either null or the image attatched to the tweet
     const [tweetImage, setTweetImage] = useState("");
@@ -25,12 +25,35 @@ const Tweet = (props) => {
     //Hook for getting the tweets image if it hasImage is true
     useEffect( () => {
         if (tweetInfo.containsImg && tweetInfo.id !== "") {
-            const tweetImgRef = ref(storage, "tweet-images/" + tweetInfo.id);
-            getDownloadURL(tweetImgRef).then( (imageSrc) => {
-                setTweetImage(<img className="tweetImg" width="100%" src={imageSrc} alt="User inputted media" />);
-            });
+            if (tweetInfo.retweetId !== "")
+            {
+                const tweetImgRef = ref(storage, "tweet-images/", tweetInfo.retweetId);
+                getDownloadURL(tweetImgRef).then( (imageSrc) => {
+                    setTweetImage(<img className="tweetImg" width="100%" src={imageSrc} alt="User inputted media" />);
+                })
+            }
+            else {
+                const tweetImgRef = ref(storage, "tweet-images/" + tweetInfo.id);
+                getDownloadURL(tweetImgRef).then( (imageSrc) => {
+                    setTweetImage(<img className="tweetImg" width="100%" src={imageSrc} alt="User inputted media" />);
+                });
+            }
         }
-    }, [tweetInfo.containsImg,tweetInfo.id])
+    }, [tweetInfo.containsImg,tweetInfo.id, tweetInfo.retweetId])
+
+    //Hook used to check if tweet is a retweet; if so, setRetweetMsg runs and tweetInfo updates to the original tweetInfo
+    useEffect( () => {
+        if (tweetInfo.retweeter) {
+            const retweeterRef = doc(db, "users", tweetInfo.retweeter);
+            getDoc(retweeterRef).then( (retweeter) => {
+                setRetweetMsg(`${retweeter.displayName} retweeted`);
+            })
+            const originalTweetRef = doc(db, "tweets", tweetInfo.retweetId);
+            getDoc(originalTweetRef).then( (originalTweet) => {
+                setTweetInfo(originalTweet.data());
+            })
+        }
+    }, [])
 
     //Hook used for retrieving the tweeter's info
     useEffect( () => {
@@ -49,15 +72,6 @@ const Tweet = (props) => {
         });
     }, [tweetInfo.tweeterId])
 
-    //Hook for checking if the tweet is a retweet and will setRetweetMsg to an element that states as such
-    useEffect( () => {
-        if (tweetInfo.retweeter) {
-            const retweeterRef = doc(db, "users", tweetInfo.retweeter);
-            getDoc(retweeterRef).then( (retweeter) => {
-                setRetweetMsg(<h4 className="retweetMsg" >{`${retweeter.displayName} retweeted`}</h4>);
-            })
-        }
-    }, [tweetInfo.retweeter])
 
     //Hook used for cleaning up state
     useEffect( () => {
@@ -65,14 +79,14 @@ const Tweet = (props) => {
             setUserImage("");
             setUsername("");
             setDisplayName("");
-            setTweetsInfo(null);
+            setTweetInfo(null);
             setTweetImage("");
             setRetweetMsg(null);
         })
     }, [])
 
     //Function for handling likes
-    const handleLike = async (e) => {
+    const handleLike = async () => {
         const tweetRef = await doc(db, "tweets", tweetInfo.id);
         const currentUserRef = await doc(db, "users", auth.currentUser.uid);
         const currentUser = (await getDoc(currentUserRef)).data();
@@ -93,29 +107,50 @@ const Tweet = (props) => {
             oldLikeArray.push(tweetInfo.id);
             await updateDoc(currentUserRef, {likes: oldLikeArray})
         }
-        setTweetsInfo((await getDoc(tweetRef)).data());
+        setTweetInfo((await getDoc(tweetRef)).data());
         //await updateDoc(tweetRef, {likes: tweetInfo.likes++});
     }
 
     //Function for handling retweets
-    const handleRetweet = async (e) => {
+    const handleRetweet = async () => {
         try {
-            const newTweetId = uniqid();
             const currentUserRef = await doc(db, "users", auth.currentUser.uid);
             const currentUser = (await getDoc(currentUserRef)).data();
-            const tweetRef = await doc(db, "tweets", newTweetId);
-            await setDoc(tweetRef, {
-                comments: [],
-                containsImg: tweetInfo.containsImg,
-                date: tweetInfo.date,
-                id: newTweetId,
-                likes: tweetInfo.likes,
-                msg: tweetInfo.msg,
-                retweeter: currentUser.uid,
-                retweets: tweetInfo.retweets,
-                retweetId: tweetInfo.id,
-                tweeterId: tweetInfo.tweeterId
+            const currentTweetRef = await doc(db, "tweets", tweetInfo.id);
+            const oldRetweet = currentUser.tweets.find( (tweet) => {
+                return tweet.retweetId === tweetInfo.id
             });
+            if (oldRetweet) {
+                const oldRetweetRef = await doc(db, "tweets", oldRetweet.id);
+                await deleteDoc(oldRetweetRef);
+                let tempTweetsArray = currentUser.tweets;
+                tempTweetsArray.filter( (tweet) => {
+                    return !(tweet.retweetId === tweetInfo.id);
+                })
+                await updateDoc(currentUserRef, tempTweetsArray);
+                await updateDoc(currentTweetRef, {retweets: tweetInfo.retweets - 1});
+            }
+            else {
+                const newTweetId = uniqid();
+                const newTweetRef = await doc(db, "tweets", newTweetId);
+                await setDoc(newTweetRef, {
+                    comments: [],
+                    containsImg: tweetInfo.containsImg,
+                    date: tweetInfo.date,
+                    id: newTweetId,
+                    likes: 0,
+                    msg: "",
+                    retweetId: tweetInfo.id,
+                    retweeter: auth.currentUser.uid,
+                    retweets: 0,
+                    tweeterId: tweetInfo.tweeterId
+                })
+                let tempTweetsArray = currentUser.tweets;
+                currentUser.tweets.push(newTweetId);
+                await updateDoc(currentUserRef, {tweets: tempTweetsArray});
+                await updateDoc(currentTweetRef, {retweets: tweetInfo.retweets + 1})
+            }
+            updateDoc()
             window.location.reload();
         }
         catch (error) {
@@ -127,7 +162,7 @@ const Tweet = (props) => {
 
     return (
         <div className="tweetHolder">
-            {retweetMsg}
+            <h3 className="defaultFont retweetMsg">{retweetMsg}</h3>
             <div className="tweet">
                 <div className="imgHolder">
                     <img className="tweetUserImg" alt="User profile" src={userImage} /> 
