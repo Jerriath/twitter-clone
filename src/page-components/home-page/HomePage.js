@@ -3,7 +3,6 @@ import React from "react";
 import Header from "./home-subcomponents/Header";
 import Footer from "./home-subcomponents/Footer";
 import HomeFeed from "./home-subcomponents/HomeFeed";
-import ProfilePage from "../profile-page/ProfilePage";
 import SignoutPanel from "./home-subcomponents/SignoutPanel";
 import LeftPanel from "./home-subcomponents/LeftPanel";
 import RightPanel from "./home-subcomponents/RightPanel";
@@ -32,8 +31,12 @@ const HomePage = () => {
     const [userId, setUserId] = useState(null);
     const [userImg, setUserImg] = useState("");
 
-    //This state is for choosing whether to display the HomeFeed or ProfilePage
-    const [showProfile, setShowProfile] = useState(false);
+    //This state is for holding what the Header component says in the title and for changing it 
+    const [headerMsg, setHeaderMsg] = useState(<h2 className="homeTitle">Home</h2>);
+
+    //These states are just used to get the buttons to be more interactive
+    const [homeClass, setHomeClass] = useState("leftOption selected");
+    const [profileClass, setProfileClass] = useState("leftOption");
 
     //This observer is used to check if someone is signed in; If yes, the homeFeed and rightPanel will be set to null
     onAuthStateChanged(auth, (user) => {
@@ -49,6 +52,11 @@ const HomePage = () => {
         return () => {
             setFooter(null);
             setRightPanel(null);
+            setTweetInput(null);
+            setUserInfo(null);
+            setUserId(null);
+            setUserImg("");
+            setHeaderMsg(null);
         }
     }, []);
 
@@ -87,20 +95,13 @@ const HomePage = () => {
         setTweetInput(null);
     }
 
-    const onProfileHandler = () => {
-        setShowProfile(true);
-    }
-    const onHomeHandler = () => {
-        setShowProfile(false);
-    }
-
     return (
         <div className="homepage">
             {tweetInput}
-            <LeftPanel onTweetHandler={onTweetHandler} onProfileHandler={onProfileHandler} onHomeHandler={onHomeHandler} />
-            <Header header="Home" />
+            <LeftPanel onTweetHandler={onTweetHandler} userInfo={userInfo} userId={userId} homeClass={homeClass} profileClass={profileClass} />
+            <Header header={headerMsg}/>
             <div className="homeContent">
-                {showProfile ? <ProfilePage /> : <HomeFeed />}
+                <HomeFeed />
                 {rightPanel}
             </div>
             {footer}

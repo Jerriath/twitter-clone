@@ -15,6 +15,7 @@ const Tweet = (props) => {
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [tweetInfo, setTweetInfo] = useState(props.tweetInfo);
+    const [tweeterId, setTweeterId] = useState(props.tweet ? props.tweet.tweeterId : "");
     
     //This state is for storing either null or the image attatched to the tweet
     const [tweetImage, setTweetImage] = useState("");
@@ -83,6 +84,7 @@ const Tweet = (props) => {
             setTweetInfo(null);
             setTweetImage("");
             setRetweetMsg(null);
+            setTweeterId("");
         })
     }, [])
 
@@ -185,7 +187,7 @@ const Tweet = (props) => {
                 <div className="tweetContent">
                     <div className="tweeterInfoHolder">
                         <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
-                        <h3 className="tweeterInfo defaultFont">{username}</h3>
+                        <h3 className="tweeterInfo defaultFont">{"@" + username}</h3>
                         <h3 className="tweeterInfo defaultFont">&middot;</h3>
                         <h3 className="tweeterInfo defaultFont">{new Date(tweetInfo.date.seconds * 1000).toLocaleDateString("en-US")}</h3>
                         <h3 className="tweeterInfo defaultFont dots">&middot;&middot;&middot;</h3>

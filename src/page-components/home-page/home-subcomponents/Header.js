@@ -6,12 +6,10 @@ import "../../styles.css";
 const Header = (props) => {
 
 
-
-
     return (
         <div className="header" >
             <span className="homeTitleDiv" >
-                <h2 className="homeTitle">{props.header}</h2>
+                {props.header}
             </span>
             <span className="searchBar" >
                 <input className="searchInput" placeholder="Search Tweeter" />
