@@ -6,18 +6,22 @@ import SignoutPanel from "../home-page/home-subcomponents/SignoutPanel";
 import LeftPanel from "../home-page/home-subcomponents/LeftPanel";
 import RightPanel from "../home-page/home-subcomponents/RightPanel";
 import TweetInput from "../home-page/home-subcomponents/TweetInput";
+import { monthToString } from "./profilePageFunctions";
 import { auth, storage, db } from "../../firebase-config";
 import { onAuthStateChanged } from "@firebase/auth";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { ref, getDownloadURL } from "@firebase/storage";
-import { getDoc, doc } from "@firebase/firestore";
+import { ref, getDownloadURL, uploadBytes } from "@firebase/storage";
+import { getDoc, doc, Timestamp } from "@firebase/firestore";
 
 //This component is almost a mirror of the HomePage component but has a specific profile's info and tweets
 const ProfilePage = () => {
 
     //This hook is used to retrieve info from the link that was clicked to get to this page
     const location = useLocation();
+
+    //This hook is for styling the file input
+    const hiddenFileInput = useRef(null);
 
     //States to hold the RightPanel and the Footer; will update to null if someone is signed in
     const [footer, setFooter] = useState(<Footer />);
@@ -31,9 +35,11 @@ const ProfilePage = () => {
 
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
+    const [currentUserId, setCurrentUserId] = useState("");
     const [userInfo, setUserInfo] = useState({});
     const [userImg, setUserImg] = useState("");
     const [headerImg, setHeaderImg] = useState("");
+    const [isUsersPage, setIsUsersPage] = useState(false);
 
     //These states are just used to get the buttons to be more interactive
     const [homeClass, setHomeClass] = useState("leftOption");
@@ -42,7 +48,15 @@ const ProfilePage = () => {
     //Hook used to update the userId
     useEffect( () => {
         setUserId(location.state?.userId);
+        setCurrentUserId(location.state?.currentUserId);
     }, [])
+
+    //This hook is to check if the current user is viewing their own page; if so isUserPage will be set to true
+    useEffect( () => {
+        if (userId === currentUserId) {
+            setIsUsersPage(true);
+        }
+    }, [userId, currentUserId])
 
     //This is also in the HomePage comp; used to change the right panel depending on auth status
     onAuthStateChanged(auth, (user) => {
@@ -60,21 +74,23 @@ const ProfilePage = () => {
         if (userId) {
             const userRef = doc(db, "users", userId);
             getDoc(userRef).then( (user) => {
-                setUserInfo(user.data());
+                let tempUserInfo = user.data();
+                tempUserInfo.joinDate = `${monthToString(tempUserInfo.joinDate.toDate().getMonth())} ${tempUserInfo.joinDate.toDate().getFullYear()}`;
+                setUserInfo(tempUserInfo);
             })
             const imageRef = ref(storage, "user-images/" + userId);
             getDownloadURL(imageRef).then( (imageSrc) => {
                 setUserImg(imageSrc);
             }); 
             try {
-                const headerRef = ref(storage, "header-images/", userId);
+                const headerRef = ref(storage, "user-headers/", userId);
                 getDownloadURL(headerRef).then( (headerSrc) => {
                     setHeaderImg(headerSrc);
                 })
             }
             catch (error) {
                 console.log(error);
-
+                setHeaderImg(null);
             }
         } 
     }, [userId])
@@ -114,6 +130,18 @@ const ProfilePage = () => {
         setHeaderMsg(<h2 className="homeTitle">Home</h2>);
     }
 
+    const handleHeaderClick = (e) => {
+        console.log("handle image click");
+        hiddenFileInput.current.click();
+    }
+
+    const handleHeaderChange = async (e) => {
+        const fileUploaded = e.target.files[0];
+        const headerRef = ref(storage, "user-headers/", userId);
+        await uploadBytes(headerRef, fileUploaded);
+        window.location.reload();
+    }
+
     return (
         <div className="homepage">
             {tweetInput}
@@ -122,11 +150,31 @@ const ProfilePage = () => {
             <div className="homeContent">
                 <div className="homeFeed">
                     <div className="profileDiv">
-                        <div className="headerDiv">
-                            
+                        <div onClick={isUsersPage ? handleHeaderClick : null} className={headerImg ? "headerDiv" : "emptyHeaderDiv"}>
+                            {headerImg ? <img className="headerImg" src={headerImg} alt="Profile's Header" /> : 
+                                <div style={{height: "100%", width: "100%", display: "flex", alignItems: "center"}}>
+                                    <svg className="emptyHeaderImg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                    <input onChange={handleHeaderChange} type="file" ref={hiddenFileInput} style={{display: "none"}} />
+                                </div>
+                            }
                         </div>
                         <div className="profileInfoDiv">
-                            
+                            <img className="profileUserImg" src={userImg} alt="Profile user" />
+                            <div className="profileInfo">
+                                <h3 className="">{userInfo.displayName}</h3>
+                                <p className="profInfoFont">{`@${userInfo.username}`}</p>
+                                <p className="profInfoFont">{userInfo.bio}</p>
+                                <p className="profInfoFont">{`Joined ${userInfo.joinDate}`}</p>
+                            </div>
+                            <div className="profileFollowInfo">
+                                
+                            </div>
+                            <div className="profileBtnsDiv">
+
+                            </div>
                         </div>
                         <div className="profileBtns">
 

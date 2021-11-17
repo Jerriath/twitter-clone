@@ -41,7 +41,8 @@ const LeftPanel = (props) => {
             <Link to={{
                 pathname: profileUrl,
                 state: {
-                    userId: userId
+                    userId: userId,
+                    currentUserId: userId
                 }
                 }} >
                 <div className={props.profileClass} >
