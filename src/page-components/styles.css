@@ -9,6 +9,7 @@
     1.f) RightPanel Styling
     1.g) TweetInput Styling
 2. Signup Page Styling
+3. Profile Page Styling
 */
 
 
@@ -755,4 +756,31 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
+
+
+
+
+/*----------Profile Page Styling----------*/
+
+.profileDiv {
+    display: flex;
+    flex-direction: column;
+    height: 50%;
+    width: 100%;
+}
+
+.headerDiv {
+    height: 45%;
+    width: 100%
+}
+
+.profileInfoDiv {
+    height: 45%;
+    width: 100%;
+}
+
+.profileBtns {
+    height: 10%;
+    width: 100%;
 }

@@ -33,6 +33,7 @@ const ProfilePage = () => {
     const [userId, setUserId] = useState("");
     const [userInfo, setUserInfo] = useState({});
     const [userImg, setUserImg] = useState("");
+    const [headerImg, setHeaderImg] = useState("");
 
     //These states are just used to get the buttons to be more interactive
     const [homeClass, setHomeClass] = useState("leftOption");
@@ -52,6 +53,8 @@ const ProfilePage = () => {
         }
     });
 
+    //I want to have a hook to check if auth.currentUser.uid is the same as the profileId passed in; if so, headerImg will be clickable and allow you to add a headerImg
+
     //This hook is for retrieving the userInfo and userImg from the profileId passed in as props via location
     useEffect( () => {
         if (userId) {
@@ -63,6 +66,16 @@ const ProfilePage = () => {
             getDownloadURL(imageRef).then( (imageSrc) => {
                 setUserImg(imageSrc);
             }); 
+            try {
+                const headerRef = ref(storage, "header-images/", userId);
+                getDownloadURL(headerRef).then( (headerSrc) => {
+                    setHeaderImg(headerSrc);
+                })
+            }
+            catch (error) {
+                console.log(error);
+
+            }
         } 
     }, [userId])
 
@@ -107,11 +120,18 @@ const ProfilePage = () => {
             <LeftPanel onTweetHandler={onTweetHandler} onProfileHandler={onProfileHandler} onHomeHandler={onHomeHandler} homeClass={homeClass} profileClass={profileClass} />
             <Header header={headerMsg}/>
             <div className="homeContent">
-                <div className="profileInfo">
-
-                </div>
                 <div className="homeFeed">
+                    <div className="profileDiv">
+                        <div className="headerDiv">
+                            
+                        </div>
+                        <div className="profileInfoDiv">
+                            
+                        </div>
+                        <div className="profileBtns">
 
+                        </div>
+                    </div>
                 </div>
                 {rightPanel}
             </div>
