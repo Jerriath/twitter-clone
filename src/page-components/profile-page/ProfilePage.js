@@ -37,6 +37,8 @@ const ProfilePage = () => {
     const [userId, setUserId] = useState("");
     const [currentUserId, setCurrentUserId] = useState("");
     const [userInfo, setUserInfo] = useState({});
+    const [follows, setFollows] = useState(0);
+    const [followers, setFollowers] = useState(0);
     const [userImg, setUserImg] = useState("");
     const [headerImg, setHeaderImg] = useState("");
     const [isUsersPage, setIsUsersPage] = useState(false);
@@ -77,6 +79,8 @@ const ProfilePage = () => {
                 let tempUserInfo = user.data();
                 tempUserInfo.joinDate = `${monthToString(tempUserInfo.joinDate.toDate().getMonth())} ${tempUserInfo.joinDate.toDate().getFullYear()}`;
                 setUserInfo(tempUserInfo);
+                setFollows(tempUserInfo.follows.length);
+                setFollowers(tempUserInfo.followers.length);
             })
             const imageRef = ref(storage, "user-images/" + userId);
             getDownloadURL(imageRef).then( (imageSrc) => {
@@ -164,20 +168,35 @@ const ProfilePage = () => {
                         <div className="profileInfoDiv">
                             <img className="profileUserImg" src={userImg} alt="Profile user" />
                             <div className="profileInfo">
-                                <h3 className="">{userInfo.displayName}</h3>
-                                <p className="profInfoFont">{`@${userInfo.username}`}</p>
+                                <h3>{userInfo.displayName}</h3>
+                                <p style={{color: "rgb(125, 125, 125)"}} className="profInfoFont">{`@${userInfo.username}`}</p>
                                 <p className="profInfoFont">{userInfo.bio}</p>
-                                <p className="profInfoFont">{`Joined ${userInfo.joinDate}`}</p>
+                                <p style={{color: "rgb(125, 125, 125)"}} className="profInfoFont">{`Joined ${userInfo.joinDate}`}</p>
                             </div>
                             <div className="profileFollowInfo">
-                                
-                            </div>
-                            <div className="profileBtnsDiv">
-
+                                <span className="profileFollowSpan">
+                                    <p style={{marginRight: "0.25em"}}>{`${follows}`}</p>
+                                    <p style={{color: "rgb(125, 125, 125)"}}>{"Following"}</p>
+                                </span>
+                                <span className="profileFollowSpan">
+                                    <p style={{marginRight: "0.25em"}}>{`${followers}`}</p>
+                                    <p style={{color: "rgb(125, 125, 125)"}}>{"Followers"}</p>
+                                </span>
                             </div>
                         </div>
-                        <div className="profileBtns">
-
+                        <div className="profileBtnsDiv">
+                            <button className="profileBtn">
+                                <p className="profileBtnFont">Tweets</p>
+                            </button>
+                            <button className="profileBtn">
+                                <p className="profileBtnFont">Tweets & Replies</p>
+                            </button>
+                            <button className="profileBtn">
+                                <p className="profileBtnFont">Media</p>
+                            </button>
+                            <button className="profileBtn">
+                                <p className="profileBtnFont">Likes</p>
+                            </button>
                         </div>
                     </div>
                 </div>

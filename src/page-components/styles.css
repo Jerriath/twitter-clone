@@ -352,7 +352,7 @@
 .tweeterInfo {
     margin: 0;
     margin-right: 1%;
-    color:rgb(125, 125, 125)
+    color:rgb(125, 125, 125);
 }
 
 .dots {
@@ -766,18 +766,18 @@
 .profileDiv {
     display: flex;
     flex-direction: column;
-    height: 50%;
+    height: 60%;
     width: 100%;
 }
 
 .headerDiv {
-    height: 45%;
+    height: 40%;
     width: 100%;
     overflow: hidden;
 }
 
 .emptyHeaderDiv {
-    height: 45%;
+    height: 40%;
     width: 100%;
     cursor: pointer;
     transition: all 0.2s linear;
@@ -802,7 +802,7 @@
 .profileUserImg {
     position: relative;
     top: -25%;
-    height: 50%;
+    height: 40%;
     width: auto;
     border-radius: 50%;
     z-index: 100;
@@ -810,7 +810,7 @@
 }
 
 .profileInfoDiv {
-    height: 45%;
+    height: 50%;
     width: 94%;
     padding: 0 3%;
 }
@@ -819,6 +819,7 @@
     position: relative;
     bottom: 35%;
     margin: 0;
+    margin-top: 5%;
 }
 
 .profileInfoFont {
@@ -827,10 +828,50 @@
 }
 
 .profileFollowInfo {
-    
+    display: flex; 
+    flex-direction: row;
+    justify-content: space-left;
+    width: auto;
+    position: relative;
+    bottom: 40%;
 }
 
-.profileBtns {
+.profileFollowSpan {
+    display: flex;
+    flex-direction: row;
+    margin-right: .75em;
+}
+
+.profileBtnsDiv {
     height: 10%;
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom:1px solid rgb(225, 225, 225);
+}
+
+.profileBtn {
+    width: 25%;
+    height: 100%;
+    background: none;
+    border: none;
+    transition: all 0.2s linear;
+}
+
+.profileBtn:hover {
+    background-color: rgba(252, 110, 80, 0.2);
+}
+
+.profileBtn:hover p {
+    color: rgb(252, 110, 80);
+}
+
+.profileBtnSelected {
+    border-bottom: 2px solid rgb(252, 110, 80);
+    margin-bottom: -2px;
+}
+
+.profileBtnFont {
+    font-weight: 600;
+    color: rgb(125, 125, 125);
 }
