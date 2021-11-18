@@ -6,6 +6,8 @@ import SignoutPanel from "../home-page/home-subcomponents/SignoutPanel";
 import LeftPanel from "../home-page/home-subcomponents/LeftPanel";
 import RightPanel from "../home-page/home-subcomponents/RightPanel";
 import TweetInput from "../home-page/home-subcomponents/TweetInput";
+import Tweet from "../home-page/home-subcomponents/Tweet";
+import uniqid from "uniqid";
 import { monthToString } from "./profilePageFunctions";
 import { auth, storage, db } from "../../firebase-config";
 import { onAuthStateChanged } from "@firebase/auth";
@@ -27,7 +29,7 @@ const ProfilePage = () => {
     const [footer, setFooter] = useState(<Footer />);
     const [rightPanel, setRightPanel] = useState(<RightPanel />);
 
-    //This state is to hold the tweetInput component; set to null untill the "Tweet" button is clicked
+    //This state is to hold the tweetInput component; set to null untill the "Tweet" a is clicked
     const [tweetInput, setTweetInput] = useState(null);
 
     //This state is for holding what the Header component says in the title and for changing it 
@@ -36,14 +38,15 @@ const ProfilePage = () => {
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
     const [currentUserId, setCurrentUserId] = useState("");
-    const [userInfo, setUserInfo] = useState({});
+    const [userInfo, setUserInfo] = useState("");
     const [follows, setFollows] = useState(0);
     const [followers, setFollowers] = useState(0);
     const [userImg, setUserImg] = useState("");
     const [headerImg, setHeaderImg] = useState("");
     const [isUsersPage, setIsUsersPage] = useState(false);
+    const [userTweets, setUserTweets] = useState([]);
 
-    //These states are just used to get the buttons to be more interactive
+    //These states are just used to get the as to be more interactive
     const [homeClass, setHomeClass] = useState("leftOption");
     const [profileClass, setProfileClass] = useState("leftOption selected");
 
@@ -98,6 +101,25 @@ const ProfilePage = () => {
             }
         } 
     }, [userId])
+
+    //This hook is for retrieving all the tweets from the tweetsArray (contains tweetIds) in the userInfo
+    useEffect( () => {
+        if (userInfo)
+        {
+            const tweetIds = userInfo.tweets;
+            const tweetsArray = new Array(0);
+            for (let i = 0; i < tweetIds.length; i++) {
+                const tweetRef = doc(db, "tweets", tweetIds[i]);
+                getDoc(tweetRef).then( async (tweet) => {
+                    const newData = await tweet.data();
+                    tweetsArray.push(newData);
+                    if (i === tweetIds.length - 1) {
+                        setUserTweets(tweetsArray);
+                    }
+                })
+            }
+        } 
+    }, [userInfo])
 
     //This hook is used to cleanup the states before unmounting
     useEffect( () => {
@@ -185,20 +207,23 @@ const ProfilePage = () => {
                             </div>
                         </div>
                         <div className="profileBtnsDiv">
-                            <button className="profileBtn">
+                            <a href={`/${userInfo.username}`} className="profileBtn profileBtnSelected">
                                 <p className="profileBtnFont">Tweets</p>
-                            </button>
-                            <button className="profileBtn">
+                            </a>
+                            <a href={`/${userInfo.username}/replies`} className="profileBtn">
                                 <p className="profileBtnFont">Tweets & Replies</p>
-                            </button>
-                            <button className="profileBtn">
+                            </a>
+                            <a href={`/${userInfo.username}/media`} className="profileBtn">
                                 <p className="profileBtnFont">Media</p>
-                            </button>
-                            <button className="profileBtn">
+                            </a>
+                            <a href={`/${userInfo.username}/likes`} className="profileBtn">
                                 <p className="profileBtnFont">Likes</p>
-                            </button>
+                            </a>
                         </div>
                     </div>
+                    {userTweets.length !== 0 ? userTweets.map( (tweet) => {
+                        return <Tweet tweetInfo={tweet} key={uniqid()} />
+                    }) : null}
                 </div>
                 {rightPanel}
             </div>
