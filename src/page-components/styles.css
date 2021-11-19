@@ -766,18 +766,18 @@
 .profileDiv {
     display: flex;
     flex-direction: column;
-    height: 60%;
+    height: 70%;
     width: 100%;
 }
 
 .headerDiv {
-    height: 40%;
+    height: 50%;
     width: 100%;
     overflow: hidden;
 }
 
 .emptyHeaderDiv {
-    height: 40%;
+    height: 50%;
     width: 100%;
     cursor: pointer;
     transition: all 0.2s linear;
@@ -810,7 +810,7 @@
 }
 
 .profileInfoDiv {
-    height: 50%;
+    height: 40%;
     width: 94%;
     padding: 0 3%;
 }
