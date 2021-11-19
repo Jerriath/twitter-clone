@@ -13,7 +13,7 @@ import { auth, storage, db } from "../../firebase-config";
 import { onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { ref, getDownloadURL, uploadBytes } from "@firebase/storage";
+import { ref, getDownloadURL, uploadBytes, deleteObject } from "@firebase/storage";
 import { getDoc, doc, Timestamp } from "@firebase/firestore";
 
 //This component is almost a mirror of the HomePage component but has a specific profile's info and tweets
@@ -58,7 +58,7 @@ const ProfilePage = () => {
 
     //This hook is to check if the current user is viewing their own page; if so isUserPage will be set to true
     useEffect( () => {
-        if (userId === currentUserId) {
+        if (userId === currentUserId && userId !== "" && currentUserId !== "") {
             setIsUsersPage(true);
         }
     }, [userId, currentUserId])
@@ -68,7 +68,7 @@ const ProfilePage = () => {
         if (user !== null && footer !== null) {
             setRightPanel(<SignoutPanel auth={auth} />);
             setFooter(null);
-            setUserId(auth.currentUser ? auth.currentUser.uid : null);
+            setCurrentUserId(auth.currentUser ? auth.currentUser.uid : null);
         }
     });
 
@@ -86,14 +86,17 @@ const ProfilePage = () => {
                 setFollowers(tempUserInfo.followers.length);
             })
             const imageRef = ref(storage, "user-images/" + userId);
+            const headerRef = ref(storage, "user-headers/" + userId);
             getDownloadURL(imageRef).then( (imageSrc) => {
                 setUserImg(imageSrc);
             }); 
             try {
-                const headerRef = ref(storage, "user-headers/", userId);
                 getDownloadURL(headerRef).then( (headerSrc) => {
                     setHeaderImg(headerSrc);
-                })
+                });
+                getDownloadURL(imageRef).then( (imageSrc) => {
+                    setUserImg(imageSrc);
+                }); 
             }
             catch (error) {
                 console.log(error);
@@ -114,6 +117,9 @@ const ProfilePage = () => {
                     const newData = await tweet.data();
                     tweetsArray.push(newData);
                     if (i === tweetIds.length - 1) {
+                        tweetsArray.sort( (a, b) => {
+                            return a.date - b.date ? -1 : 1;
+                        })
                         setUserTweets(tweetsArray);
                     }
                 })
@@ -163,8 +169,17 @@ const ProfilePage = () => {
 
     const handleHeaderChange = async (e) => {
         const fileUploaded = e.target.files[0];
-        const headerRef = ref(storage, "user-headers/", userId);
-        await uploadBytes(headerRef, fileUploaded);
+        try {
+            const oldHeaderRef = ref(storage, "user-headers/" + userId);
+            await deleteObject(oldHeaderRef);
+            const newHeaderRef = ref(storage, "user-headers/" + userId);
+            await uploadBytes(newHeaderRef, fileUploaded);
+        }
+        catch (error) {
+            console.log(error);
+            const newHeaderRef = ref(storage, "user-headers/" + userId);
+            await uploadBytes(newHeaderRef, fileUploaded);
+        }
         window.location.reload();
     }
 
@@ -183,9 +198,9 @@ const ProfilePage = () => {
                                         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                                         <circle cx="12" cy="13" r="4"></circle>
                                     </svg>
-                                    <input onChange={handleHeaderChange} type="file" ref={hiddenFileInput} style={{display: "none"}} />
                                 </div>
                             }
+                            <input onChange={handleHeaderChange} type="file" ref={hiddenFileInput} style={{display: "none"}} />
                         </div>
                         <div className="profileInfoDiv">
                             <img className="profileUserImg" src={userImg} alt="Profile user" />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { doc, getDoc, updateDoc, setDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../../../firebase-config";
@@ -15,7 +16,7 @@ const Tweet = (props) => {
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [tweetInfo, setTweetInfo] = useState(props.tweetInfo);
-    const [tweeterId, setTweeterId] = useState(props.tweet ? props.tweet.tweeterId : "");
+    const [tweeterId, setTweeterId] = useState(props.tweetInfo ? props.tweetInfo.tweeterId : "");
     
     //This state is for storing either null or the image attatched to the tweet
     const [tweetImage, setTweetImage] = useState("");
@@ -186,8 +187,18 @@ const Tweet = (props) => {
                 </div>
                 <div className="tweetContent">
                     <div className="tweeterInfoHolder">
-                        <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
-                        <h3 className="tweeterInfo defaultFont">{"@" + username}</h3>
+                        <Link to={{
+                            pathname: `/${username}`,
+                            state: {
+                                userId: tweeterId,
+                                currentUserId: auth.currentUser.uid
+                            }
+                            }} >
+                            <div className="profileFollowSpan">
+                                <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
+                                <h3 className="tweeterInfo defaultFont">{"@" + username}</h3>
+                            </div>
+                        </Link>
                         <h3 className="tweeterInfo defaultFont">&middot;</h3>
                         <h3 className="tweeterInfo defaultFont">{new Date(tweetInfo.date.seconds * 1000).toLocaleDateString("en-US")}</h3>
                         <h3 className="tweeterInfo defaultFont dots">&middot;&middot;&middot;</h3>
