@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { doc, getDoc, updateDoc, setDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
@@ -23,6 +23,9 @@ const Tweet = (props) => {
 
     //This state is for holding either null or a msg that says this tweet is a retweet
     const [retweetMsg, setRetweetMsg] = useState(null);
+
+    //This hook is for getting around the fact you can't nest an anchor in an anchor
+    const tweetPageLink = useRef(null);
 
     //Hook for getting the tweets image if it hasImage is true
     useEffect( () => {
@@ -174,12 +177,20 @@ const Tweet = (props) => {
         }
     }
 
+    //Function to handle clicking on the tweetPateLink
+    const onTweetPageLinkClick = () => {
+        tweetPageLink.current.click();
+    }
+
     //Function for handling comments; this one is gonna be hard I think
 
 
 
     return (
-        <div className="tweetHolder">
+        <div onClick={onTweetPageLinkClick} className="tweetHolder">
+            <Link ref={tweetPageLink} to={`/tweet/${tweetInfo.id}`}>
+
+            </Link>
             <h3 className="defaultFont retweetMsg">{retweetMsg}</h3>
             <div className="tweet">
                 <div className="imgHolder">
@@ -196,7 +207,7 @@ const Tweet = (props) => {
                             }} >
                             <div className="profileFollowSpan">
                                 <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
-                                <h3 className="tweeterInfo defaultFont">{"@" + username}</h3>
+                                <h3 className="tweeterInfo defaultFont">{" @" + username}</h3>
                             </div>
                         </Link>
                         <h3 className="tweeterInfo defaultFont">&middot;</h3>
