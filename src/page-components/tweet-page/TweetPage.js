@@ -8,11 +8,12 @@ import RightPanel from "../home-page/home-subcomponents/RightPanel";
 import TweetInput from "../home-page/home-subcomponents/TweetInput";
 import Tweet from "../home-page/home-subcomponents/Tweet";
 import { auth, storage, db } from "../../firebase-config";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ref, getDownloadURL } from "@firebase/storage";
 import { getDoc, doc } from "@firebase/firestore";
 import { onAuthStateChanged } from "@firebase/auth";
+import uniqid from "uniqid";
 
 
 
@@ -21,9 +22,6 @@ const TweetPage = (props) => {
 
     //This hook is used to retrieve info from the link that was clicked to get to this page
     const location = useLocation();
-
-    //This hook is for getting around the fact you can't nest an anchor in an anchor
-    const tweetPageLink = useRef(null);
 
     //States to hold the RightPanel and the Footer; will update to null if someone is signed in
     const [footer, setFooter] = useState(<Footer />);
@@ -38,8 +36,10 @@ const TweetPage = (props) => {
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
     const [currentUserId, setCurrentUserId] = useState("");
+    const [currentUserImg, setCurrentUserImg] = useState("");
     const [userInfo, setUserInfo] = useState("");
     const [userImg, setUserImg] = useState("");
+    const [tweetInfo, setTweetInfo] = useState("");
 
     //This is also in the HomePage comp; used to change the right panel depending on auth status
     onAuthStateChanged(auth, (user) => {
@@ -54,7 +54,8 @@ const TweetPage = (props) => {
     useEffect( () => {
         setUserId(location.state?.userId);
         setCurrentUserId(location.state?.currentUserId);
-    }, []) 
+        setTweetInfo(location.state.tweetInfo);
+    }, [location.state.userId, location.state.currentUserId, location.state.tweetInfo]) 
 
     //This hook is for retrieving the userInfo and userImg from the profileId passed in as props via location
     useEffect( () => {
@@ -67,8 +68,14 @@ const TweetPage = (props) => {
             getDownloadURL(imageRef).then( (imageSrc) => {
                 setUserImg(imageSrc);
             }); 
+            if (currentUserId) {
+                const currentImgRef = ref(storage, "user-images/" + currentUserId);
+                getDownloadURL(currentImgRef).then( (imageSrc) => {
+                    setCurrentUserImg(imageSrc);
+                }); 
+            }
         } 
-    }, [userId])
+    }, [userId, currentUserId])
 
     //This hook is used to cleanup the states before unmounting
     useEffect( () => {
@@ -77,15 +84,18 @@ const TweetPage = (props) => {
             setRightPanel(null);
             setTweetInput(null);
             setUserId("");
+            setCurrentUserId("");
             setHeaderMsg(null);
             setUserInfo({});
             setUserImg("");
+            setTweetInfo(null);
+            setCurrentUserImg("");
         }
     }, []);
 
     const onTweetHandler = () => {
-        if (userId) {
-            setTweetInput(<TweetInput userId={userId} profPic={userImg} closeTweet={closeTweetHandler}/>)
+        if (currentUserId) {
+            setTweetInput(<TweetInput userId={currentUserId} profPic={currentUserImg} closeTweet={closeTweetHandler}/>)
         }
         else {
             alert("Please sign in to tweet.");
@@ -110,7 +120,7 @@ const TweetPage = (props) => {
             <Header header={headerMsg}/>
             <div className="homeContent">
                 <div className="homeFeed">
-                    
+                    {tweetInfo ? <Tweet tweetInfo={tweetInfo} key={uniqid()} /> : null}
                 </div>
                 {rightPanel}
             </div>

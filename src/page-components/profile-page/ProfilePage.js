@@ -38,6 +38,7 @@ const ProfilePage = () => {
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
     const [currentUserId, setCurrentUserId] = useState("");
+    const [currentUserImg, setCurrentUserImg] = useState("");
     const [userInfo, setUserInfo] = useState("");
     const [follows, setFollows] = useState(0);
     const [followers, setFollowers] = useState(0);
@@ -86,16 +87,17 @@ const ProfilePage = () => {
                 setFollowers(tempUserInfo.followers.length);
             })
             const imageRef = ref(storage, "user-images/" + userId);
+            const currentImageRef = ref(storage, "user-images/" + currentUserId);
             const headerRef = ref(storage, "user-headers/" + userId);
             getDownloadURL(imageRef).then( (imageSrc) => {
                 setUserImg(imageSrc);
             }); 
+            getDownloadURL(currentImageRef).then( (imageSrc) => {
+                setCurrentUserImg(imageSrc);
+            })
             try {
                 getDownloadURL(headerRef).then( (headerSrc) => {
                     setHeaderImg(headerSrc);
-                });
-                getDownloadURL(imageRef).then( (imageSrc) => {
-                    setUserImg(imageSrc);
                 }); 
             }
             catch (error) {
@@ -143,8 +145,8 @@ const ProfilePage = () => {
     }, []);
 
     const onTweetHandler = () => {
-        if (userId) {
-            setTweetInput(<TweetInput userId={userId} profPic={userImg} closeTweet={closeTweetHandler}/>)
+        if (currentUserId) {
+            setTweetInput(<TweetInput userId={currentUserId} profPic={userImg} closeTweet={closeTweetHandler}/>)
         }
         else {
             alert("Please sign in to tweet.");

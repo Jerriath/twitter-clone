@@ -94,28 +94,30 @@ const Tweet = (props) => {
 
     //Function for handling likes
     const handleLike = async () => {
-        const tweetRef = await doc(db, "tweets", tweetInfo.id);
-        const currentUserRef = await doc(db, "users", auth.currentUser.uid);
-        const currentUser = (await getDoc(currentUserRef)).data();
-        if (currentUser.likes.includes(tweetInfo.id)) {
-            console.log("Disliked")
-            console.log("Old Likes: " + tweetInfo.likes)
-            await updateDoc(tweetRef, {likes: tweetInfo.likes - 1});
-            let newLikesArray = currentUser.likes.filter( (value) => {
-                return value !== tweetInfo.id;
-            })
-            updateDoc(currentUserRef, {likes: newLikesArray});
+        if(auth.currentUser) {
+            const tweetRef = await doc(db, "tweets", tweetInfo.id);
+            const currentUserRef = await doc(db, "users", auth.currentUser.uid);
+            const currentUser = (await getDoc(currentUserRef)).data();
+            if (currentUser.likes.includes(tweetInfo.id)) {
+                console.log("Disliked")
+                console.log("Old Likes: " + tweetInfo.likes)
+                await updateDoc(tweetRef, {likes: tweetInfo.likes - 1});
+                let newLikesArray = currentUser.likes.filter( (value) => {
+                    return value !== tweetInfo.id;
+                })
+                updateDoc(currentUserRef, {likes: newLikesArray});
+            }
+            else {
+                console.log("Liked")
+                console.log("Old likes: " + tweetInfo.likes)
+                await updateDoc(tweetRef, {likes: tweetInfo.likes + 1});
+                let oldLikeArray = currentUser.likes;
+                oldLikeArray.push(tweetInfo.id);
+                await updateDoc(currentUserRef, {likes: oldLikeArray})
+            }
+            setTweetInfo((await getDoc(tweetRef)).data());
+            //await updateDoc(tweetRef, {likes: tweetInfo.likes++});
         }
-        else {
-            console.log("Liked")
-            console.log("Old likes: " + tweetInfo.likes)
-            await updateDoc(tweetRef, {likes: tweetInfo.likes + 1});
-            let oldLikeArray = currentUser.likes;
-            oldLikeArray.push(tweetInfo.id);
-            await updateDoc(currentUserRef, {likes: oldLikeArray})
-        }
-        setTweetInfo((await getDoc(tweetRef)).data());
-        //await updateDoc(tweetRef, {likes: tweetInfo.likes++});
     }
 
     //Function for handling retweets
@@ -188,9 +190,14 @@ const Tweet = (props) => {
 
     return (
         <div onClick={onTweetPageLinkClick} className="tweetHolder">
-            <Link ref={tweetPageLink} to={`/tweet/${tweetInfo.id}`}>
-
-            </Link>
+            <Link ref={tweetPageLink} to={{
+                pathname: `/tweet/${tweetInfo.id}`,
+                state: {
+                    userId: tweeterId,
+                    currentUserId: (auth.currentUser ? auth.currentUser.uid : null),
+                    tweetInfo: tweetInfo
+                }
+            }}></Link>
             <h3 className="defaultFont retweetMsg">{retweetMsg}</h3>
             <div className="tweet">
                 <div className="imgHolder">
@@ -202,9 +209,9 @@ const Tweet = (props) => {
                             pathname: `/${username}`,
                             state: {
                                 userId: tweeterId,
-                                currentUserId: auth.currentUser.uid
+                                currentUserId: (auth.currentUser ? auth.currentUser.uid : null)
                             }
-                            }} >
+                        }} >
                             <div className="profileFollowSpan">
                                 <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
                                 <h3 className="tweeterInfo defaultFont">{" @" + username}</h3>
