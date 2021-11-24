@@ -135,6 +135,15 @@ const TweetInput = (props) => {
             const imageRef = ref(storage, `tweet-images/${newTweetId}`)
             await uploadBytes(imageRef, image);
         }
+        //Add a condititional to see if the new tweet is a comment; if so, the parentTweet's comment array will be updated
+        if (props.parentTweet !== "") {
+            const parentTweetRef = doc(db, "tweets", props.parentTweet);
+            const tempCommentsArray = await getDoc(parentTweetRef).then( (snapshot) => {
+                return snapshot.data().comments;
+            })
+            tempCommentsArray.push(newTweetId);
+            updateDoc(parentTweetRef, {comments: tempCommentsArray});
+        }
         const userRef = doc(db, "users", props.userId);
         let userTweets = user.tweets;
         userTweets.push(newTweetId)
