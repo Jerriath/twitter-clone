@@ -20,8 +20,8 @@ const Tweet = (props) => {
     //This state is for storing either null or the image attatched to the tweet
     const [tweetImage, setTweetImage] = useState("");
 
-    //This state is for holding either null or a msg that says this tweet is a retweet
-    const [retweetMsg, setRetweetMsg] = useState(null);
+    //This state is for holding either null or a msg that says this tweet is a retweet or comment
+    const [headerMsg, setHeaderMsg] = useState(null);
 
     //This hook is for getting around the fact you can't nest an anchor in an anchor
     const tweetPageLink = useRef(null);
@@ -45,16 +45,32 @@ const Tweet = (props) => {
         }
     }, [tweetInfo.containsImg,tweetInfo.id, tweetInfo.retweetId])
 
-    //Hook used to check if tweet is a retweet; if so, setRetweetMsg runs and tweetInfo updates to the original tweetInfo
+    //Hook used to check if tweet is a retweet; if so, setHeaderMsg runs and tweetInfo updates to the original tweetInfo
     useEffect( () => {
         if (tweetInfo.retweeter) {
             const retweeterRef = doc(db, "users", tweetInfo.retweeter);
             getDoc(retweeterRef).then( (retweeter) => {
-                setRetweetMsg(`${retweeter.data().displayName} retweeted`);
+                setHeaderMsg(`${retweeter.data().displayName} retweeted`);
             })
             const originalTweetRef = doc(db, "tweets", tweetInfo.retweetId);
             getDoc(originalTweetRef).then( (originalTweet) => {
                 setTweetInfo(originalTweet.data());
+            })
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    //Hook used to check if tweet is a comment; if so, setCommentMsg runs and shows that the tweet is a comment 
+    useEffect( () => {
+        if (tweetInfo.parentTweet !== "") {
+            const parentRef = doc(db, "tweets", tweetInfo.parentTweet);
+            getDoc(parentRef).then( (parentSnapshot) => {
+                return parentSnapshot.data().tweeterId;
+            }).then( (tweeterId) => {
+                const tweeterRef = doc(db, "users", tweeterId);
+                getDoc(tweeterRef).then( (tweeterSnapshot) => {
+                    setHeaderMsg(`Reply to ${tweeterSnapshot.data().displayName}`)
+                })
             })
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,7 +102,7 @@ const Tweet = (props) => {
             setDisplayName("");
             setTweetInfo(null);
             setTweetImage("");
-            setRetweetMsg(null);
+            setHeaderMsg(null);
             setTweeterId("");
         })
     }, [])
@@ -190,7 +206,10 @@ const Tweet = (props) => {
         tweetPageLink.current.click();
     }
 
-
+    //Stoping the propagation because the parent div had an onClick which needs to be prevented
+    const goToProfile = (e) => {
+        e.stopPropagation();
+    }
 
     return (
         <div onClick={onTweetPageLinkClick} className="tweetHolder">
@@ -202,13 +221,13 @@ const Tweet = (props) => {
                     tweetInfo: tweetInfo
                 }
             }}></Link>
-            <h3 className="defaultFont retweetMsg">{retweetMsg}</h3>
+            <h3 className="defaultFont headerMsg">{headerMsg}</h3>
             <div className="tweet">
                 <div className="imgHolder">
                     <img className="tweetUserImg" alt="User profile" src={userImage} /> 
                 </div>
                 <div className="tweetContent">
-                    <div className="tweeterInfoHolder">
+                    <div onClick={goToProfile} className="tweeterInfoHolder">
                         <Link to={{
                             pathname: `/${username}`,
                             state: {

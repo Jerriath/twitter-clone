@@ -310,7 +310,7 @@
     background-color: rgb(225, 225, 225, 0.5);
 }
 
-.retweetMsg {
+.headerMsg {
     text-align: left;
     padding-left: 4em !important;
     padding: .25em;
