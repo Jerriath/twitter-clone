@@ -10,7 +10,6 @@ import uniqid from "uniqid";
 
 const Tweet = (props) => {
 
-
     //States for storing info related to the tweet (specifically tweeter info); this is needed because the tweeter info needs to be fetched from backend
     const [userImage, setUserImage] = useState("");
     const [username, setUsername] = useState("");
@@ -93,7 +92,8 @@ const Tweet = (props) => {
     }, [])
 
     //Function for handling likes
-    const handleLike = async () => {
+    const handleLike = async (e) => {
+        e.stopPropagation();
         if(auth.currentUser) {
             const tweetRef = await doc(db, "tweets", tweetInfo.id);
             const currentUserRef = await doc(db, "users", auth.currentUser.uid);
@@ -120,8 +120,14 @@ const Tweet = (props) => {
         }
     }
 
+    const handleComment = (e) => {
+        e.stopPropagation();
+        props.onTweetHandler(tweetInfo.id);
+    }
+
     //Function for handling retweets
-    const handleRetweet = async () => {
+    const handleRetweet = async (e) => {
+        e.stopPropagation();
         try {
             const currentUserRef = doc(db, "users", auth.currentUser.uid);
             const currentUser = (await getDoc(currentUserRef)).data();
@@ -184,8 +190,6 @@ const Tweet = (props) => {
         tweetPageLink.current.click();
     }
 
-    //Function for handling comments; this one is gonna be hard I think
-
 
 
     return (
@@ -231,7 +235,7 @@ const Tweet = (props) => {
 
 
                     <div className="tweetBtnHolder">
-                        <div className="btnDiv commentDiv">
+                        <div onClick={handleComment} className="btnDiv commentDiv">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="tweetBtn comment">
                                 <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
                             </svg>

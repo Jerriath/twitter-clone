@@ -80,11 +80,10 @@ const HomePage = () => {
         }
     }, [userId])
 
-
-    const onTweetHandler = () => {
-        console.log(userImg);
+    //Function for handling normal tweets
+    const onTweetHandler = (parentTweet) => {
         if (userId) {
-            setTweetInput(<TweetInput userId={userId} profPic={userImg} closeTweet={closeTweetHandler}/>)
+            setTweetInput(<TweetInput parentTweet={parentTweet} userId={userId} profPic={userImg} closeTweet={closeTweetHandler}/>)
         }
         else {
             alert("Please sign in to tweet.");
@@ -101,7 +100,7 @@ const HomePage = () => {
             <LeftPanel onTweetHandler={onTweetHandler} userInfo={userInfo} userId={userId} homeClass={homeClass} profileClass={profileClass} />
             <Header header={headerMsg}/>
             <div className="homeContent">
-                <HomeFeed />
+                <HomeFeed onTweetHandler={onTweetHandler}/>
                 {rightPanel}
             </div>
             {footer}

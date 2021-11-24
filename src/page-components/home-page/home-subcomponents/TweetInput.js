@@ -15,13 +15,16 @@ const TweetInput = (props) => {
     const [msg, setMsg] = useState("");
     const [bonusRows, setBonusRows] = useState(0);
     const [image, setImage] = useState("");
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState({});
 
     //This hook is for styling the file input
     const hiddenFileInput = useRef(null);
 
     //State used for storing the submit btn style 
     const [submitStyle, setSubmitStyle] = useState({});
+
+    //State for saving whether if the new tweet is a real tweet or comment
+    const [isComment, setIsComment] = useState(props.isComment);
 
     //These hooks are for greying out the submit btn until something is inputted into the form
     useEffect( () => {
@@ -34,7 +37,6 @@ const TweetInput = (props) => {
     }, [msg]);
 
     useEffect( () => {
-        console.log(image);
         if (image === "") {
             setSubmitStyle({opacity: 0.5, pointerEvents: "none"})
         }
@@ -48,11 +50,10 @@ const TweetInput = (props) => {
         const userRef = doc(db, "users", props.userId);
         getDoc(userRef).then( (userInfo) => {
             setUser(userInfo.data());
-            console.log(userInfo.data());
         })
     }, [props.userId])
 
-
+    //This function is for automatically adjusting the textarea size to fit the text
     const onMsgChange = (e) => {
         if (e.target.scrollHeight > e.target.offsetHeight + 5) {
 			setBonusRows(bonusRows + 1);
@@ -75,7 +76,7 @@ const TweetInput = (props) => {
         setImage(fileUploaded);
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmitTweet = async (e) => {
         e.preventDefault();
         const newTweetId = uniqid();
         const tweetRef = doc(db, "tweets", newTweetId);
@@ -92,7 +93,8 @@ const TweetInput = (props) => {
                 retweets: 0,
                 retweeter: "",
                 retweetId: "",
-                tweeterId: props.userId
+                tweeterId: props.userId,
+                parentTweet: props.parentTweet
             })
         }
         //For tweets that only have an image and no msg
@@ -108,7 +110,8 @@ const TweetInput = (props) => {
                 retweeter: "",
                 retweetId: "",
                 retweets: 0,
-                tweeterId: props.userId
+                tweeterId: props.userId,
+                parentTweet: props.parentTweet
             });
             const imageRef = ref(storage, `tweet-images/${newTweetId}`)
             await uploadBytes(imageRef, image);
@@ -126,7 +129,8 @@ const TweetInput = (props) => {
                 retweeter: "",
                 retweetId: "",
                 retweets: 0,
-                tweeterId: props.userId
+                tweeterId: props.userId,
+                parentTweet: props.parentTweet
             });
             const imageRef = ref(storage, `tweet-images/${newTweetId}`)
             await uploadBytes(imageRef, image);
@@ -161,7 +165,7 @@ const TweetInput = (props) => {
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(252, 110, 80)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                             </button>
                             <input onChange={handleImageChange} type="file" ref={hiddenFileInput} style={{display: "none"}} />
-                            <button onClick={handleSubmit} className="submitTweet" style={submitStyle}>Tweet</button>
+                            <button onClick={handleSubmitTweet} className="submitTweet" style={submitStyle}>Tweet</button>
                         </div>
                     </div>
                 </form>

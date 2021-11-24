@@ -23,6 +23,10 @@ const LeftPanel = (props) => {
         setUserId(props.userId);
     }, [props.userId])
 
+    const openTweet = () => {
+        props.onTweetHandler("");
+    }
+
     return (
         <div className="leftPanel" >
             <Link className="logo" to="/">
@@ -53,7 +57,7 @@ const LeftPanel = (props) => {
                 </div>
             </Link>
             <div className="redButton">
-                <h2 onClick={props.onTweetHandler} className="buttonFont">Tweet</h2>
+                <h2 onClick={openTweet} className="buttonFont">Tweet</h2>
             </div>
         </div>
     )

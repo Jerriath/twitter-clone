@@ -8,7 +8,7 @@ import uniqid from "uniqid";
 
 
 
-const HomeFeed = () => {
+const HomeFeed = (props) => {
 
     const [tweets, setTweets] = useState([]);
 
@@ -22,16 +22,22 @@ const HomeFeed = () => {
         }).then( async (returnedArray) => {
             returnedArray.sort( (a, b) => {
                 return a.date - b.date ? -1 : 1;
+            });
+            return returnedArray;
+        }).then( (sortedArray) => {
+            const filteredArray = sortedArray.filter(tweet => {
+                return (tweet.parentTweet === "");
             })
-            await setTweets(returnedArray);
+            return filteredArray;
+        }).then( (filteredArray) => {
+            setTweets(filteredArray);
         })
     }, []);
-
 
     return (
         <div className="homeFeed" >
             {tweets.map( (tweet) => {
-                return <Tweet tweetInfo={tweet} key={uniqid()} />
+                return <Tweet onTweetHandler={props.onTweetHandler} tweetInfo={tweet} key={uniqid()} />
             })}
         </div>
     )
