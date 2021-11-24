@@ -105,7 +105,7 @@ const ProfilePage = () => {
                 setHeaderImg(null);
             }
         } 
-    }, [userId])
+    }, [userId, currentUserId])
 
     //This hook is for retrieving all the tweets from the tweetsArray (contains tweetIds) in the userInfo
     useEffect( () => {
@@ -185,6 +185,7 @@ const ProfilePage = () => {
         window.location.reload();
     }
 
+    //I need to change the anchor elements to Links and pass in the same states that were in default profile page
     return (
         <div className="homepage">
             {tweetInput}
