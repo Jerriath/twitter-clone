@@ -19,7 +19,7 @@ const HomeFeed = (props) => {
                 tempArray.push(tweet.data());
             });
             return tempArray;
-        }).then( async (returnedArray) => {
+        }).then( (returnedArray) => {
             returnedArray.sort( (a, b) => {
                 return a.date - b.date ? -1 : 1;
             });

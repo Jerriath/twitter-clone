@@ -8,11 +8,11 @@ import RightPanel from "../home-page/home-subcomponents/RightPanel";
 import TweetInput from "../home-page/home-subcomponents/TweetInput";
 import Tweet from "../home-page/home-subcomponents/Tweet";
 import uniqid from "uniqid";
-import { monthToString, sortOnlyTweets } from "./profilePageFunctions";
+import { monthToString, sortOnlyTweets, sortOnlyMedia } from "./profilePageFunctions";
 import { auth, storage, db } from "../../firebase-config";
 import { onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes, deleteObject } from "@firebase/storage";
 import { getDoc, doc, Timestamp } from "@firebase/firestore";
 
@@ -114,20 +114,21 @@ const ProfilePage = () => {
             const tweetsArray = new Array(0);
             for (let i = 0; i < tweetIds.length; i++) {
                 const tweetRef = doc(db, "tweets", tweetIds[i]);
-                getDoc(tweetRef).then( async (tweet) => {
-                    const newData = await tweet.data();
+                getDoc(tweetRef).then( (tweet) => {
+                    const newData = tweet.data();
                     tweetsArray.push(newData);
                     if (i === tweetIds.length - 1) {
                         tweetsArray.sort( (a, b) => {
                             return a.date - b.date ? -1 : 1;
                         })
                         setUserTweets(tweetsArray);
-                        setProfilePage(location.state?.option)
+                        console.log(location.state?.option);
+                        setProfilePage(location.state?.option);
                     }
                 })
             }
         } 
-    }, [userInfo])
+    }, [userInfo, location.state?.option])
 
     //This hook is for updating the tweetsArray to match what tab the current user is in
     useEffect( () => {
@@ -139,10 +140,29 @@ const ProfilePage = () => {
                 return;
             }
             else if (profilePage === 2) {
-
+                setUserTweets(sortOnlyMedia(userTweets));
             }
             else if (profilePage === 3) {
-
+                //Done like this to use await on getDoc
+                async function sortByLikes() {
+                    const likesIds = userInfo.likes;
+                    let tempArray = new Array(0);
+                    for (let i = 0; i < likesIds.length; i++) {
+                        const tweetRef = doc(db, "tweets", likesIds[i]);
+                         await getDoc(tweetRef).then( (tweet) => {
+                            const newData = tweet.data();
+                            tempArray.push(newData);
+                            if (i === likesIds.length - 1) {
+                                tempArray.sort( (a, b) => {
+                                    return a.date - b.date ? -1 : 1;
+                                })
+                                console.log(tempArray);
+                                setUserTweets(tempArray);
+                            }
+                        })
+                    }
+                }
+                sortByLikes();
             }
         }
     }, [profilePage])
@@ -244,18 +264,59 @@ const ProfilePage = () => {
                             </div>
                         </div>
                         <div className="profileBtnsDiv">
-                            <a href={`/${userInfo.username}`} className="profileBtn profileBtnSelected">
-                                <p className="profileBtnFont">Tweets</p>
-                            </a>
-                            <a href={`/${userInfo.username}/replies`} className="profileBtn">
-                                <p className="profileBtnFont">Tweets & Replies</p>
-                            </a>
-                            <a href={`/${userInfo.username}/media`} className="profileBtn">
-                                <p className="profileBtnFont">Media</p>
-                            </a>
-                            <a href={`/${userInfo.username}/likes`} className="profileBtn">
-                                <p className="profileBtnFont">Likes</p>
-                            </a>
+                            <Link className={profilePage === 0 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
+                                pathname: `/${userInfo.username}`,
+                                state: {
+                                    userId: userId,
+                                    currentUserId: currentUserId,
+                                    option: 0
+                                }
+                                
+
+                            }}>
+                                <div>
+                                    <p className="profileBtnFont">Tweets</p>
+                                </div>
+                            </Link>
+                            <Link className={profilePage === 1 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
+                                pathname: `/${userInfo.username}/replies`,
+                                state: {
+                                    userId: userId,
+                                    currentUserId: currentUserId,
+                                    option: 1
+                                }
+
+                            }}>
+                                <div>
+                                    <p className="profileBtnFont">Tweets & Replies</p>
+                                </div>
+                            </Link>
+                            <Link className={profilePage === 2 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
+                                pathname: `/${userInfo.username}/media`,
+                                state: {
+                                    userId: userId,
+                                    currentUserId: currentUserId,
+                                    option: 2
+                                }
+
+                            }}>
+                                <div>
+                                    <p className="profileBtnFont">Media</p>
+                                </div>
+                            </Link>
+                            <Link className={profilePage === 3 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
+                                pathname: `/${userInfo.username}/likes`,
+                                state: {
+                                    userId: userId,
+                                    currentUserId: currentUserId,
+                                    option: 3
+                                }
+
+                            }}>
+                                <div>
+                                    <p className="profileBtnFont">Likes</p>
+                                </div>
+                            </Link>
                         </div>
                     </div>
                     {userTweets.length !== 0 ? userTweets.map( (tweet) => {

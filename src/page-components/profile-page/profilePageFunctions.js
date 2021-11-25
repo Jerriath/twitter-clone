@@ -24,4 +24,11 @@ const sortOnlyTweets = (tweets) => {
     return filteredArray;
 }
 
-export { monthToString, sortOnlyTweets };
+const sortOnlyMedia = (tweets) => {
+    const filteredArray = tweets.filter( (tweet) => {
+        return (tweet.containsImg);
+    })
+    return filteredArray;
+}
+
+export { monthToString, sortOnlyTweets, sortOnlyMedia };
