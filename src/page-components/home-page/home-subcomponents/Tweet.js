@@ -232,7 +232,8 @@ const Tweet = (props) => {
                             pathname: `/${username}`,
                             state: {
                                 userId: tweeterId,
-                                currentUserId: (auth.currentUser ? auth.currentUser.uid : null)
+                                currentUserId: (auth.currentUser ? auth.currentUser.uid : null),
+                                option: 0
                             }
                         }} >
                             <div className="profileFollowSpan">

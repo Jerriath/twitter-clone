@@ -17,4 +17,11 @@ const monthToString = (num) => {
     }
 }
 
-export { monthToString };
+const sortOnlyTweets = (tweets) => {
+    const filteredArray = tweets.filter( (tweet) => {
+        return (tweet.parentTweet === "");
+    });
+    return filteredArray;
+}
+
+export { monthToString, sortOnlyTweets };

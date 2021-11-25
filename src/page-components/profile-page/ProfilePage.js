@@ -8,7 +8,7 @@ import RightPanel from "../home-page/home-subcomponents/RightPanel";
 import TweetInput from "../home-page/home-subcomponents/TweetInput";
 import Tweet from "../home-page/home-subcomponents/Tweet";
 import uniqid from "uniqid";
-import { monthToString } from "./profilePageFunctions";
+import { monthToString, sortOnlyTweets } from "./profilePageFunctions";
 import { auth, storage, db } from "../../firebase-config";
 import { onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect, useRef } from "react";
@@ -38,6 +38,7 @@ const ProfilePage = () => {
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
     const [currentUserId, setCurrentUserId] = useState("");
+    const [profilePage, setProfilePage] = useState(null);
     const [currentUserImg, setCurrentUserImg] = useState("");
     const [userInfo, setUserInfo] = useState("");
     const [follows, setFollows] = useState(0);
@@ -72,8 +73,6 @@ const ProfilePage = () => {
             setCurrentUserId(auth.currentUser ? auth.currentUser.uid : null);
         }
     });
-
-    //I want to have a hook to check if auth.currentUser.uid is the same as the profileId passed in; if so, headerImg will be clickable and allow you to add a headerImg
 
     //This hook is for retrieving the userInfo and userImg from the profileId passed in as props via location
     useEffect( () => {
@@ -123,11 +122,30 @@ const ProfilePage = () => {
                             return a.date - b.date ? -1 : 1;
                         })
                         setUserTweets(tweetsArray);
+                        setProfilePage(location.state?.option)
                     }
                 })
             }
         } 
     }, [userInfo])
+
+    //This hook is for updating the tweetsArray to match what tab the current user is in
+    useEffect( () => {
+        if (userTweets.length !== 0){
+            if (profilePage === 0) {
+                setUserTweets(sortOnlyTweets(userTweets));
+            }
+            else if (profilePage === 1) {
+                return;
+            }
+            else if (profilePage === 2) {
+
+            }
+            else if (profilePage === 3) {
+
+            }
+        }
+    }, [profilePage])
 
     //This hook is used to cleanup the states before unmounting
     useEffect( () => {
@@ -186,6 +204,7 @@ const ProfilePage = () => {
     }
 
     //I need to change the anchor elements to Links and pass in the same states that were in default profile page
+    
     return (
         <div className="homepage">
             {tweetInput}

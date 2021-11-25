@@ -46,7 +46,8 @@ const LeftPanel = (props) => {
                 pathname: profileUrl,
                 state: {
                     userId: userId,
-                    currentUserId: userId
+                    currentUserId: userId,
+                    option: 0
                 }
                 }} >
                 <div className={props.profileClass} >
