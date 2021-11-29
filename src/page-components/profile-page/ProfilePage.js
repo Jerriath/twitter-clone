@@ -84,6 +84,7 @@ const ProfilePage = () => {
                 setUserInfo(tempUserInfo);
                 setFollows(tempUserInfo.follows.length);
                 setFollowers(tempUserInfo.followers.length);
+                setHeaderMsg(<h2 className="homeTitle">{tempUserInfo.displayName}</h2>);
             })
             const currentUserRef = doc(db, "users", currentUserId);
             getDoc(currentUserRef).then( (user) => {
@@ -189,7 +190,7 @@ const ProfilePage = () => {
 
     const onTweetHandler = () => {
         if (currentUserId) {
-            setTweetInput(<TweetInput userId={currentUserId} profPic={userImg} closeTweet={closeTweetHandler}/>)
+            setTweetInput(<TweetInput userId={currentUserId} profPic={currentUserImg} closeTweet={closeTweetHandler}/>)
         }
         else {
             alert("Please sign in to tweet.");

@@ -31,7 +31,7 @@ const TweetPage = (props) => {
     const [tweetInput, setTweetInput] = useState(null);
 
     //This state is for holding what the Header component says in the title and for changing it 
-    const [headerMsg, setHeaderMsg] = useState(<h2 className="homeTitle">Home</h2>);
+    const [headerMsg, setHeaderMsg] = useState(<h2 className="homeTitle">Tweet</h2>);
 
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
@@ -94,6 +94,15 @@ const TweetPage = (props) => {
             })
         }
     }, [commentIds])
+
+    //This hook will sort the comments based on date posted
+    useEffect( () => {
+        let tempArray = comments;
+        tempArray.sort( (a, b) => {
+            return a.date - b.date ? 1 : -1;
+        })
+        setComments(tempArray);
+    }, [comments])
 
     //This hook is used to cleanup the states before unmounting
     useEffect( () => {
