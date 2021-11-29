@@ -40,6 +40,8 @@ const TweetPage = (props) => {
     const [userInfo, setUserInfo] = useState("");
     const [userImg, setUserImg] = useState("");
     const [tweetInfo, setTweetInfo] = useState("");
+    const [commentIds, setCommentIds] = useState([]);
+    const [comments, setComments] = useState([]);
 
     //This is also in the HomePage comp; used to change the right panel depending on auth status
     onAuthStateChanged(auth, (user) => {
@@ -55,6 +57,7 @@ const TweetPage = (props) => {
         setUserId(location.state?.userId);
         setCurrentUserId(location.state?.currentUserId);
         setTweetInfo(location.state.tweetInfo);
+        setCommentIds(location.state.tweetInfo.comments);
     }, [location.state.userId, location.state.currentUserId, location.state.tweetInfo]) 
 
     //This hook is for retrieving the userInfo and userImg from the profileId passed in as props via location
@@ -77,6 +80,21 @@ const TweetPage = (props) => {
         } 
     }, [userId, currentUserId])
 
+    //This hook is used to load in comments that are part of the tweetInfo
+    useEffect( () => {
+        let tempArray = [];
+        for (let i = 0; i < commentIds.length; i++) {
+            const newCommentRef = doc(db, "tweets", commentIds[i]);
+            getDoc(newCommentRef).then( (snapshot) => {
+                tempArray.push(snapshot.data());
+                if( i === commentIds.length - 1) {
+                    setComments(tempArray);
+                    console.log(tempArray);
+                }
+            })
+        }
+    }, [commentIds])
+
     //This hook is used to cleanup the states before unmounting
     useEffect( () => {
         return () => {
@@ -90,6 +108,8 @@ const TweetPage = (props) => {
             setUserImg("");
             setTweetInfo(null);
             setCurrentUserImg("");
+            setCommentIds([]);
+            setComments([]);
         }
     }, []);
 
@@ -121,6 +141,7 @@ const TweetPage = (props) => {
             <div className="homeContent">
                 <div className="homeFeed">
                     {tweetInfo ? <Tweet tweetInfo={tweetInfo} key={uniqid()} /> : null}
+                    {comments ? comments.map( ( comment) => <Tweet tweetInfo={comment} key={uniqid()} />) : null}
                 </div>
                 {rightPanel}
             </div>

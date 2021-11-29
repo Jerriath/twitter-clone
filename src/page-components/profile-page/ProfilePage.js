@@ -41,6 +41,7 @@ const ProfilePage = () => {
     const [profilePage, setProfilePage] = useState(null);
     const [currentUserImg, setCurrentUserImg] = useState("");
     const [userInfo, setUserInfo] = useState("");
+    const [currentUserInfo, setCurrentUserInfo] = useState("");
     const [follows, setFollows] = useState(0);
     const [followers, setFollowers] = useState(0);
     const [userImg, setUserImg] = useState("");
@@ -56,7 +57,7 @@ const ProfilePage = () => {
     useEffect( () => {
         setUserId(location.state?.userId);
         setCurrentUserId(location.state?.currentUserId);
-    }, [])
+    }, [location])
 
     //This hook is to check if the current user is viewing their own page; if so isUserPage will be set to true
     useEffect( () => {
@@ -70,13 +71,12 @@ const ProfilePage = () => {
         if (user !== null && footer !== null) {
             setRightPanel(<SignoutPanel auth={auth} />);
             setFooter(null);
-            setCurrentUserId(auth.currentUser ? auth.currentUser.uid : null);
         }
     });
 
     //This hook is for retrieving the userInfo and userImg from the profileId passed in as props via location
     useEffect( () => {
-        if (userId) {
+        if (userId && currentUserId) {
             const userRef = doc(db, "users", userId);
             getDoc(userRef).then( (user) => {
                 let tempUserInfo = user.data();
@@ -84,6 +84,11 @@ const ProfilePage = () => {
                 setUserInfo(tempUserInfo);
                 setFollows(tempUserInfo.follows.length);
                 setFollowers(tempUserInfo.followers.length);
+            })
+            const currentUserRef = doc(db, "users", currentUserId);
+            getDoc(currentUserRef).then( (user) => {
+                setCurrentUserInfo(user.data());
+                console.log(user.data());
             })
             const imageRef = ref(storage, "user-images/" + userId);
             const currentImageRef = ref(storage, "user-images/" + currentUserId);
@@ -195,13 +200,6 @@ const ProfilePage = () => {
         setTweetInput(null);
     }
 
-    const onProfileHandler = (user) => {
-        setUserId(user);
-    }
-    const onHomeHandler = () => {
-        setHeaderMsg(<h2 className="homeTitle">Home</h2>);
-    }
-
     const handleHeaderClick = (e) => {
         console.log("handle image click");
         hiddenFileInput.current.click();
@@ -228,7 +226,7 @@ const ProfilePage = () => {
     return (
         <div className="homepage">
             {tweetInput}
-            <LeftPanel onTweetHandler={onTweetHandler} onProfileHandler={onProfileHandler} onHomeHandler={onHomeHandler} homeClass={homeClass} profileClass={profileClass} />
+            <LeftPanel onTweetHandler={onTweetHandler} userId={currentUserId} userInfo={currentUserInfo} homeClass={homeClass} profileClass={profileClass}  />
             <Header header={headerMsg}/>
             <div className="homeContent">
                 <div className="homeFeed">
