@@ -890,4 +890,19 @@
     bottom: auto;
     margin: auto;
     width: 20% !important;
+    border-color: rgb(252, 110, 80);
+    color: rgb(255, 176, 160);
+    font-weight: 600;
+}
+
+.followBtn:hover {
+    background: rgb(252, 110, 80);
+}
+
+.following::after {
+    content: "Following";
+}
+
+.following:hover::after {
+    content: "Unfollow";
 }

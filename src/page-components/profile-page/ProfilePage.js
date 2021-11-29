@@ -14,7 +14,7 @@ import { onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes, deleteObject } from "@firebase/storage";
-import { getDoc, doc, Timestamp } from "@firebase/firestore";
+import { getDoc, doc, Timestamp, updateDoc } from "@firebase/firestore";
 
 //This component is almost a mirror of the HomePage component but has a specific profile's info and tweets
 const ProfilePage = () => {
@@ -34,7 +34,7 @@ const ProfilePage = () => {
 
     //This state is for holding what the Header component and follow btn says in the title and for changing it 
     const [headerMsg, setHeaderMsg] = useState(<h2 className="homeTitle">Home</h2>);
-    const [followBtn, setFollowBtn] = useState(<button class="formBtn followBtn" >Follow</button>);
+    const [followBtn, setFollowBtn] = useState(<button className="formBtn followBtn" >Follow</button>);
 
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
@@ -90,7 +90,6 @@ const ProfilePage = () => {
             const currentUserRef = doc(db, "users", currentUserId);
             getDoc(currentUserRef).then( (user) => {
                 setCurrentUserInfo(user.data());
-                console.log(user.data());
             })
             const imageRef = ref(storage, "user-images/" + userId);
             const currentImageRef = ref(storage, "user-images/" + currentUserId);
@@ -113,20 +112,55 @@ const ProfilePage = () => {
         } 
     }, [userId, currentUserId])
 
+    //Function for handling Follows
+    const handleFollow = async (e) => {
+        const userRef = doc(db, "users", userId);
+        const user = (await getDoc(userRef)).data();
+        const currentUserRef = doc(db, "users", currentUserId);
+        const currentUser = (await getDoc(currentUserRef)).data();
+        if (user.followers.includes(currentUserId)) {
+            console.log("Unfollowed")
+            let tempFollowers = user.followers;
+            let tempFollows = currentUser.follows;
+            console.log(tempFollowers);
+            console.log(tempFollows);
+            const newFollowers = tempFollowers.filter( follower => follower !== currentUserId);
+            const newFollows = tempFollows.filter( follow => follow !== userId);
+            console.log(newFollowers);
+            console.log(newFollows);
+            await updateDoc(userRef, {followers: newFollowers});
+            await updateDoc(currentUserRef, {follows: newFollows});
+        }
+        else {
+            console.log("Followed")
+            let tempFollowers = user.followers;
+            let tempFollows = currentUser.follows;
+            console.log(tempFollowers);
+            console.log(tempFollows);
+            tempFollowers.push(currentUserId);
+            tempFollows.push(userId)
+            console.log(tempFollowers);
+            console.log(tempFollows);
+            await updateDoc(userRef, {followers: tempFollowers});
+            await updateDoc(currentUserRef, {follows: tempFollows});
+        }
+        window.location.reload();
+    }
+
     //Hook used to changed the followBtnText depending on if currentUser is following or not
     useEffect( () => {
-        for (let i = 0; i < followers.length; i++) {
-            if (followers[i] === currentUserId) {
-                setFollowBtn(<button class="formBtn followBtn" >Following</button>);
-            }
-        }
         if (userId === currentUserId) {
             setFollowBtn(null);
         }
         else {
-            setFollowBtn(<button class="formBtn followBtn" >Follow</button>);
+            setFollowBtn(<button onClick={handleFollow} className="formBtn followBtn" >Follow</button>);
         }
-    }, [followers, currentUserId])
+        for (let i = 0; i < followers.length; i++) {
+            if (followers[i] === currentUserId) {
+                setFollowBtn(<button onClick={handleFollow} className="formBtn followBtn following" ></button>);
+            }
+        }
+    }, [followers])
 
     //This hook is for retrieving all the tweets from the tweetsArray (contains tweetIds) in the userInfo
     useEffect( () => {
@@ -144,7 +178,6 @@ const ProfilePage = () => {
                             return a.date - b.date ? -1 : 1;
                         })
                         setUserTweets(tweetsArray);
-                        console.log(location.state?.option);
                         setProfilePage(location.state?.option);
                     }
                 })
@@ -178,7 +211,6 @@ const ProfilePage = () => {
                                 tempArray.sort( (a, b) => {
                                     return a.date - b.date ? -1 : 1;
                                 })
-                                console.log(tempArray);
                                 setUserTweets(tempArray);
                             }
                         })
