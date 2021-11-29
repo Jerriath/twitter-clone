@@ -32,8 +32,9 @@ const ProfilePage = () => {
     //This state is to hold the tweetInput component; set to null untill the "Tweet" a is clicked
     const [tweetInput, setTweetInput] = useState(null);
 
-    //This state is for holding what the Header component says in the title and for changing it 
+    //This state is for holding what the Header component and follow btn says in the title and for changing it 
     const [headerMsg, setHeaderMsg] = useState(<h2 className="homeTitle">Home</h2>);
+    const [followBtn, setFollowBtn] = useState(<button class="formBtn followBtn" >Follow</button>);
 
     //These states are for storing the profile information that is displayed at the top of the page
     const [userId, setUserId] = useState("");
@@ -82,8 +83,8 @@ const ProfilePage = () => {
                 let tempUserInfo = user.data();
                 tempUserInfo.joinDate = `${monthToString(tempUserInfo.joinDate.toDate().getMonth())} ${tempUserInfo.joinDate.toDate().getFullYear()}`;
                 setUserInfo(tempUserInfo);
-                setFollows(tempUserInfo.follows.length);
-                setFollowers(tempUserInfo.followers.length);
+                setFollows(tempUserInfo.follows);
+                setFollowers(tempUserInfo.followers);
                 setHeaderMsg(<h2 className="homeTitle">{tempUserInfo.displayName}</h2>);
             })
             const currentUserRef = doc(db, "users", currentUserId);
@@ -111,6 +112,21 @@ const ProfilePage = () => {
             }
         } 
     }, [userId, currentUserId])
+
+    //Hook used to changed the followBtnText depending on if currentUser is following or not
+    useEffect( () => {
+        for (let i = 0; i < followers.length; i++) {
+            if (followers[i] === currentUserId) {
+                setFollowBtn(<button class="formBtn followBtn" >Following</button>);
+            }
+        }
+        if (userId === currentUserId) {
+            setFollowBtn(null);
+        }
+        else {
+            setFollowBtn(<button class="formBtn followBtn" >Follow</button>);
+        }
+    }, [followers, currentUserId])
 
     //This hook is for retrieving all the tweets from the tweetsArray (contains tweetIds) in the userInfo
     useEffect( () => {
@@ -185,6 +201,7 @@ const ProfilePage = () => {
             setProfileClass("");
             setUserInfo({});
             setUserImg("");
+            setFollowBtn(null);
         }
     }, []);
 
@@ -246,6 +263,7 @@ const ProfilePage = () => {
                         <div className="profileInfoDiv">
                             <img className="profileUserImg" src={userImg} alt="Profile user" />
                             <div className="profileInfo">
+                                {followBtn}
                                 <h3>{userInfo.displayName}</h3>
                                 <p style={{color: "rgb(125, 125, 125)"}} className="profInfoFont">{`@${userInfo.username}`}</p>
                                 <p className="profInfoFont">{userInfo.bio}</p>
@@ -253,11 +271,11 @@ const ProfilePage = () => {
                             </div>
                             <div className="profileFollowInfo">
                                 <span className="profileFollowSpan">
-                                    <p style={{marginRight: "0.25em"}}>{`${follows}`}</p>
+                                    <p style={{marginRight: "0.25em"}}>{`${follows.length}`}</p>
                                     <p style={{color: "rgb(125, 125, 125)"}}>{"Following"}</p>
                                 </span>
                                 <span className="profileFollowSpan">
-                                    <p style={{marginRight: "0.25em"}}>{`${followers}`}</p>
+                                    <p style={{marginRight: "0.25em"}}>{`${followers.length}`}</p>
                                     <p style={{color: "rgb(125, 125, 125)"}}>{"Followers"}</p>
                                 </span>
                             </div>
