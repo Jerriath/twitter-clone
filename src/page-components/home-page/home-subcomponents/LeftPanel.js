@@ -21,7 +21,6 @@ const LeftPanel = (props) => {
     //Hook for updating the userId state
     useEffect( () => {
         setUserId(props.userId);
-        console.log(props.userId);
     }, [props.userId])
 
     const openTweet = () => {

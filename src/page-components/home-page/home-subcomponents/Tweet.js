@@ -243,6 +243,7 @@ const Tweet = (props) => {
                 </div>
                 <div className="tweetContent">
                     <div onClick={goToProfile} className="tweeterInfoHolder">
+                        <HoverPopup userId={tweetInfo.tweeterId} hovered={isHovered} />
                         <Link to={{
                             pathname: `/${username}`,
                             state: {
@@ -260,7 +261,6 @@ const Tweet = (props) => {
                         <h3 className="tweeterInfo defaultFont">{new Date(tweetInfo.date.seconds * 1000).toLocaleDateString("en-US")}</h3>
                         <h3 className="tweeterInfo defaultFont dots">&middot;&middot;&middot;</h3>
                     </div>
-                    <HoverPopup hovered={isHovered} />
                     <div className="tweetMsgHolder">
                         <p className="tweetMsg">{tweetInfo.msg}</p>
                     </div>
