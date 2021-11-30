@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, setDoc, deleteDoc, Timestamp } from "firebase/f
 import { ref, getDownloadURL } from "firebase/storage";
 import { db, storage, auth } from "../../../firebase-config";
 import uniqid from "uniqid";
+import HoverPopup from "./HoverPopup";
 
 
 
@@ -19,6 +20,9 @@ const Tweet = (props) => {
     
     //This state is for storing either null or the image attatched to the tweet
     const [tweetImage, setTweetImage] = useState("");
+
+    //Used to keep track of if the username is being hovered or not
+    const [isHovered, setIsHovered] = useState(false);
 
     //This state is for holding either null or a msg that says this tweet is a retweet or comment
     const [headerMsg, setHeaderMsg] = useState(null);
@@ -104,6 +108,7 @@ const Tweet = (props) => {
             setTweetImage("");
             setHeaderMsg(null);
             setTweeterId("");
+            setIsHovered(false);
         })
     }, [])
 
@@ -211,6 +216,16 @@ const Tweet = (props) => {
         e.stopPropagation();
     }
 
+    //This function will be used to append the preview div on hover
+    const appendOnHover = (e) => {
+        if (isHovered) {
+            setIsHovered(false);
+        }
+        else {
+            setIsHovered(true);
+        }
+    }
+
     return (
         <div onClick={onTweetPageLinkClick} className="tweetHolder">
             <Link ref={tweetPageLink} to={{
@@ -236,7 +251,7 @@ const Tweet = (props) => {
                                 option: 0
                             }
                         }} >
-                            <div className="profileFollowSpan">
+                            <div onMouseOut={appendOnHover} onMouseOver={appendOnHover} className="profileFollowSpan">
                                 <h3 className="tweeterDisplayName defaultFont">{displayName}</h3>
                                 <h3 className="tweeterInfo defaultFont">{" @" + username}</h3>
                             </div>
@@ -245,6 +260,7 @@ const Tweet = (props) => {
                         <h3 className="tweeterInfo defaultFont">{new Date(tweetInfo.date.seconds * 1000).toLocaleDateString("en-US")}</h3>
                         <h3 className="tweeterInfo defaultFont dots">&middot;&middot;&middot;</h3>
                     </div>
+                    <HoverPopup hovered={isHovered} />
                     <div className="tweetMsgHolder">
                         <p className="tweetMsg">{tweetInfo.msg}</p>
                     </div>

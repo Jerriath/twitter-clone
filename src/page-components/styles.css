@@ -8,7 +8,8 @@
     1.e) HomeFeed Styling
     1.f) RightPanel Styling
     1.g) TweetInput Styling
-2. Signup Page Styling
+    1.h) Popup Preview Styling
+2. Signin / Signup Page Styling
 3. Profile Page Styling
 */
 
@@ -280,8 +281,6 @@
     font-weight: 500;
     color: white;
 }
-
-
 
 /*-----HomeFeed Styling-----*/
 .homeFeed {
@@ -630,6 +629,14 @@
     background-color: rgb(223, 52, 18);
 }
 
+/*-----Popup Preview Styling-----*/
+.hoverPopup {
+    border: 1px solid black;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+}
+
 
 
 
@@ -681,7 +688,7 @@
 }
 
 .signinInput {
-    width: 100%;
+    width: 90%;
     padding: 0 5%;
     height: 2.5em;
     border-radius: 1.5em;
