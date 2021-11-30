@@ -53,7 +53,7 @@ const HoverPopup = (props) => {
     const mouseOutHandler = () => {
         setPrevHovered(false);
     }
-
+//Have to add in the rest of the information and also need to get the follow button working like how it works on profile page
     return (
         <div onMouseEnter={mouseEnterHandler} onMouseLeave={mouseOutHandler} style={prevHovered || textHovered ? {display: "flex"} : {display: "none"}} className="hoverPopup">
             <div className="prevHeader">
@@ -61,13 +61,19 @@ const HoverPopup = (props) => {
                 <button className="formBtn"></button>
             </div>
             <div className="prevUser">
-                
+                <p style={{fontSize: "1.5em"}} className="defaultFont tweeterDisplayName">{userInfo.displayName}</p>
+                <p className="defaultFont tweeterInfo">{"@" + userInfo.username}</p>
             </div>
             <div className="prevBio">
-                
+                <p className="defaultFont">{userInfo.bio ? (userInfo.bio.length > 50 ? userInfo.bio.slice(0, 50) + "..." : userInfo.bio) : ""}</p>
             </div>
             <div className="prevFollows">
-                
+                <span>
+
+                </span>
+                <span>
+
+                </span>
             </div>
         </div>
     )

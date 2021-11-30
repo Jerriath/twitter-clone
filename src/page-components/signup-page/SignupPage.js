@@ -102,6 +102,7 @@ const SignupPage = () => {
                 await uploadBytes(imageRef, image);
                 await setDoc(docRef, {
                     username: username,
+                    bio: "",
                     displayName: displayName,
                     likes: [],
                     tweets: [],

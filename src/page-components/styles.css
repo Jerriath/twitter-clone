@@ -631,10 +631,12 @@
 
 /*-----Popup Preview Styling-----*/
 .hoverPopup {
-    border: 1px solid white;
+    border: 1px solid rgb(225, 225, 225);
+    box-shadow: 1px 1px 1px rgb(225, 225, 225);
     border-radius: 1em;
     min-width: 250px;
-    height: 20%;
+    max-width: 250px;
+    min-height: 20%;
     position: absolute;
     flex-direction: column;
     justify-content: space-between;
@@ -651,8 +653,7 @@
 
 .prevUser {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
 .prevBio {
@@ -664,7 +665,7 @@
 .prevFollows {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: left;
 }
 
 
