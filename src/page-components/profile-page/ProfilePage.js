@@ -77,7 +77,7 @@ const ProfilePage = () => {
 
     //This hook is for retrieving the userInfo and userImg from the profileId passed in as props via location
     useEffect( () => {
-        if (userId && currentUserId) {
+        if (userId) {
             const userRef = doc(db, "users", userId);
             getDoc(userRef).then( (user) => {
                 let tempUserInfo = user.data();
@@ -87,19 +87,21 @@ const ProfilePage = () => {
                 setFollowers(tempUserInfo.followers);
                 setHeaderMsg(<h2 className="homeTitle">{tempUserInfo.displayName}</h2>);
             })
-            const currentUserRef = doc(db, "users", currentUserId);
-            getDoc(currentUserRef).then( (user) => {
-                setCurrentUserInfo(user.data());
-            })
             const imageRef = ref(storage, "user-images/" + userId);
-            const currentImageRef = ref(storage, "user-images/" + currentUserId);
             const headerRef = ref(storage, "user-headers/" + userId);
             getDownloadURL(imageRef).then( (imageSrc) => {
                 setUserImg(imageSrc);
             }); 
-            getDownloadURL(currentImageRef).then( (imageSrc) => {
-                setCurrentUserImg(imageSrc);
-            })
+            if (currentUserId) {
+                const currentImageRef = ref(storage, "user-images/" + currentUserId);
+                const currentUserRef = doc(db, "users", currentUserId);
+                getDoc(currentUserRef).then( (user) => {
+                    setCurrentUserInfo(user.data());
+                })
+                getDownloadURL(currentImageRef).then( (imageSrc) => {
+                    setCurrentUserImg(imageSrc);
+                })
+            }
             try {
                 getDownloadURL(headerRef).then( (headerSrc) => {
                     setHeaderImg(headerSrc);

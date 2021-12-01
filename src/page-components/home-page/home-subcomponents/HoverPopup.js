@@ -41,7 +41,7 @@ const HoverPopup = (props) => {
 
     //Hook used to update what the followBtn looks like depending on the current user's follow status
     useEffect( () => {
-        if (userInfo.followers) {
+        if (userInfo.followers && auth.currentUser) {
             if (props.userId === auth.currentUser.uid) {
                 setFollowBtn(null);
             }
@@ -53,6 +53,9 @@ const HoverPopup = (props) => {
                     setFollowBtn(<button onClick={handleFollow} className="formBtn prevFollowBtn following" ></button>);
                 }
             }
+        }
+        else {
+            setFollowBtn(null);
         }
     }, [userInfo])
 
