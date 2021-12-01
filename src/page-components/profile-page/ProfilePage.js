@@ -14,7 +14,7 @@ import { onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes, deleteObject } from "@firebase/storage";
-import { getDoc, doc, Timestamp, updateDoc } from "@firebase/firestore";
+import { getDoc, doc, updateDoc } from "@firebase/firestore";
 
 //This component is almost a mirror of the HomePage component but has a specific profile's info and tweets
 const ProfilePage = () => {

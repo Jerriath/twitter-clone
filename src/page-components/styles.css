@@ -638,9 +638,9 @@
     max-width: 250px;
     min-height: 20%;
     position: absolute;
+    margin-top: 1.1rem;
     flex-direction: column;
     justify-content: space-between;
-    margin: 0;
     background-color: white;
     padding: 1em;
 }
@@ -666,6 +666,18 @@
     display: flex;
     flex-direction: row;
     justify-content: left;
+}
+
+.prevFollowBtn {
+    width: auto;
+    border-color: rgb(252, 110, 80);
+    color: rgb(255, 176, 160);
+    font-weight: 600;
+    border-color: rgb(252, 110, 80) !important;
+}
+
+.prevFollowBtn:hover {
+    background-color: rgb(252, 110, 80);
 }
 
 
