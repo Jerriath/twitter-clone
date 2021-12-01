@@ -20,6 +20,7 @@ const RightPanel = () => {
                     </Link>
                 </div>
             </div>
+            <p>Created by <a style={{color: "rgb(252, 110, 80)"}} href="https://github.com/Jerriath">Jerry Zhang</a></p>
         </div>
     )
 }
