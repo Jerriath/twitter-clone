@@ -29,10 +29,10 @@ const LeftPanel = (props) => {
 
     return (
         <div className="leftPanel" >
-            <Link className="logo" to="/">
+            <Link className="logo" to="/twitter-clone/">
                 <img className="logoImg" src={Logo} alt="Page logo" />
             </Link>
-            <Link to="/" >
+            <Link to="/twitter-clone/" >
                 <div className={props.homeClass} >
                     <svg className="optionFont" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                         width="26" height="26"
@@ -43,7 +43,7 @@ const LeftPanel = (props) => {
                 </div>
             </Link>
             <Link to={{
-                pathname: profileUrl,
+                pathname: "/twitter-clone/" + profileUrl,
                 state: {
                     userId: userId,
                     currentUserId: userId,

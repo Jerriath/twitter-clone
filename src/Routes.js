@@ -12,11 +12,11 @@ const Routes = () => {
 		<Router>
 
 			<Switch>
-				<Route exact path="/signin" component={SigninPage} />
-				<Route exact path="/signup" component={SignupPage} />
-				<Route exact path="/" component={HomePage} />
-				<Route path="/tweet/" component={TweetPage} />
-				<Route path="/" component={ProfilePage} />
+				<Route exact path="/twitter-clone/signin" component={SigninPage} />
+				<Route exact path="/twitter-clone/signup" component={SignupPage} />
+				<Route exact path="/twitter-clone/" component={HomePage} />
+				<Route path="/twitter-clone/tweet/" component={TweetPage} />
+				<Route path="/twitter-clone/" component={ProfilePage} />
 			</Switch>
 
 		</Router>

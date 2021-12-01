@@ -316,7 +316,7 @@ const ProfilePage = () => {
                         </div>
                         <div className="profileBtnsDiv">
                             <Link className={profilePage === 0 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
-                                pathname: `/${userInfo.username}`,
+                                pathname: `/twitter-clone/${userInfo.username}`,
                                 state: {
                                     userId: userId,
                                     currentUserId: currentUserId,
@@ -330,7 +330,7 @@ const ProfilePage = () => {
                                 </div>
                             </Link>
                             <Link className={profilePage === 1 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
-                                pathname: `/${userInfo.username}/replies`,
+                                pathname: `/twitter-clone/${userInfo.username}/replies`,
                                 state: {
                                     userId: userId,
                                     currentUserId: currentUserId,
@@ -343,7 +343,7 @@ const ProfilePage = () => {
                                 </div>
                             </Link>
                             <Link className={profilePage === 2 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
-                                pathname: `/${userInfo.username}/media`,
+                                pathname: `/twitter-clone/${userInfo.username}/media`,
                                 state: {
                                     userId: userId,
                                     currentUserId: currentUserId,
@@ -356,7 +356,7 @@ const ProfilePage = () => {
                                 </div>
                             </Link>
                             <Link className={profilePage === 3 ? "profileBtn profileBtnSelected" : "profileBtn"} to={{
-                                pathname: `/${userInfo.username}/likes`,
+                                pathname: `/twitter-clone/${userInfo.username}/likes`,
                                 state: {
                                     userId: userId,
                                     currentUserId: currentUserId,

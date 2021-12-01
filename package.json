@@ -2,7 +2,7 @@
   "name": "twitter-clone",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://Jerriath.github.io/twitter-clone",
+  "homepage": "http://Jerriath.github.io/twitter-clone/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",

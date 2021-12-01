@@ -229,7 +229,7 @@ const Tweet = (props) => {
     return (
         <div onClick={onTweetPageLinkClick} className="tweetHolder">
             <Link ref={tweetPageLink} to={{
-                pathname: `/tweet/${tweetInfo.id}`,
+                pathname: `/twitter-clone/tweet/${tweetInfo.id}`,
                 state: {
                     userId: tweeterId,
                     currentUserId: (auth.currentUser ? auth.currentUser.uid : null),
@@ -245,7 +245,7 @@ const Tweet = (props) => {
                     <div onClick={goToProfile} className="tweeterInfoHolder">
                         <HoverPopup userId={tweetInfo.tweeterId} hovered={isHovered} />
                         <Link to={{
-                            pathname: `/${username}`,
+                            pathname: `/twitter-clone/${username}`,
                             state: {
                                 userId: tweeterId,
                                 currentUserId: (auth.currentUser ? auth.currentUser.uid : null),
